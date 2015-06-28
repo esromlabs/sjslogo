@@ -22,13 +22,13 @@ class Turtle {
         this.pen_down = true;
     }
     push() {
-		this.turtle_stack.push([this.x, this.y, this.h]);
+		this.turtle_stack.push([this.x, this.y, this.h.rad]);
 	}
     pop() {
 		let pos = this.turtle_stack.pop();
 		this.x = pos[0];
 		this.y = pos[1];
-		this.h = pos[2];
+		this.h.rad = pos[2];
 	}
     fd(dist: number) {
 		this.ctx.beginPath();
@@ -92,7 +92,9 @@ function w1(t: Turtle, scale: number, level: number) {
 		t.bk(scale);
 		w34(t, s, l);
 		t.pop();
-		t.lt(pent(5));
+
+		t.push();
+		t.lt(pent(4));
 		t.bk(scale);
 		t4(t, s, l);
 		t.pop();
@@ -119,7 +121,7 @@ function w34(t: Turtle, scale: number, level: number) {
 		t.lt(pent(1));
 		w1(t, s, l);
 		t.pop();
-
+		
 		t.push();
 		t.lt(pent(4));
 		t.bk(scale);
@@ -141,37 +143,32 @@ function t4(t: Turtle, scale: number, level: number) {
 		let s = scale * 0.61803399;
 		let l = level - 1;
 		t.push();
-		t.lt(pent(3));
-		t.bk(scale);
-		// w34(t, s, l);
+		t.lt(pent(2));
+		w34(t, s, l);
 		t.pop();
-		t.lt(pent(5));
-		t.bk(scale);
-		// t4();
-		t.pop();	
 	}	
 }
 function t2w2(t: Turtle, scale: number, level: number) {
+	let s = scale * 0.61803399;
+	let l = level - 1;
 	if (!level) {
-		t.push();
-		t.lt(pent(4));
-		t.bk(scale);
 		t2(t, scale);
-		t.pop();
+		
 		t.push();
-		t.lt(pent(3));
-		t.bk(scale);
+		t.lt(pent(2));
+		t.fd(scale);
+		t.rt(pent(3));
 		w2(t, scale);
 		t.pop();
 	}
 	else {
-		let s = scale * 0.61803399;
-		let l = level - 1;
 		t.push();
 		t.lt(pent(3));
 		t.bk(scale);
 		// w34(t, s, l);
 		t.pop();
+
+		t.push();
 		t.lt(pent(5));
 		t.bk(scale);
 		// t4();
@@ -203,6 +200,7 @@ function w2(t: Turtle, s: number) {
 yurt.pu();
 //w34(yurt, 160, 0);
 //t4 (yurt, 160, 0);
-t2(yurt, 160);
-w2(yurt, 160);
-//w1(yurt, 160, 2);
+//t2(yurt, 160);
+//w2(yurt, 160);
+w1(yurt, 160, 2);
+
