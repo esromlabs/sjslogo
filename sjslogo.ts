@@ -114,14 +114,17 @@ function w34(t: Turtle, scale: number, level: number) {
 		let s = scale * 0.61803399;
 		let l = level - 1;
 		t.push();
-		t.lt(pent(3));
-		t.bk(scale);
-		// w34(t, s, l);
+		t.rt(pent(5));
+		t.bk(scale * 1.61803399);
+		t.lt(pent(1));
+		w1(t, s, l);
 		t.pop();
-		t.lt(pent(5));
+
+		t.push();
+		t.lt(pent(4));
 		t.bk(scale);
-		// t4();
-		t.pop();	
+		t2w2(t, s, l);
+		t.pop();
 	}	
 }
 function t4(t: Turtle, scale: number, level: number) {
@@ -148,7 +151,58 @@ function t4(t: Turtle, scale: number, level: number) {
 		t.pop();	
 	}	
 }
+function t2w2(t: Turtle, scale: number, level: number) {
+	if (!level) {
+		t.push();
+		t.lt(pent(4));
+		t.bk(scale);
+		t2(t, scale);
+		t.pop();
+		t.push();
+		t.lt(pent(3));
+		t.bk(scale);
+		w2(t, scale);
+		t.pop();
+	}
+	else {
+		let s = scale * 0.61803399;
+		let l = level - 1;
+		t.push();
+		t.lt(pent(3));
+		t.bk(scale);
+		// w34(t, s, l);
+		t.pop();
+		t.lt(pent(5));
+		t.bk(scale);
+		// t4();
+		t.pop();	
+	}	
+}
+function t2(t: Turtle, s: number) {
+	t.push();
+	t.rt(pent(2));
+	t.fd(s);
+	t.rt(pent(1));
+	t.bk(s);
+	t.pd();
+	t.fd(s);
+	t.pu();
+	t.pop();
+}
+function w2(t: Turtle, s: number) {
+	t.push();
+	t.rt(pent(1));
+	t.fd(s);
+	t.rt(pent(3));
+	t.bk(s);
+	t.pd();
+	t.fd(s);
+	t.pu();
+	t.pop();
+}
 yurt.pu();
 //w34(yurt, 160, 0);
 //t4 (yurt, 160, 0);
-w1(yurt, 160, 1);
+t2(yurt, 160);
+w2(yurt, 160);
+//w1(yurt, 160, 2);
