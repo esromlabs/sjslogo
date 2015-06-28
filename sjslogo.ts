@@ -1,6 +1,7 @@
+// http://www.typescriptlang.org/Playground
 class Heading {
 	rad: number;
-	constructor() { this.rad = 0; }
+	constructor() { this.rad = Math.PI * 1.5; }
 	add(degrees: number) { 
 		this.rad += degrees * 0.0174532925;
 	}
@@ -12,32 +13,43 @@ class Turtle {
 	y: number;
 	h: Heading; // heading in radians
 	pen_down: boolean;
-	
+	turtle_stack = [];
     constructor(ctx : CanvasRenderingContext2D) {
         this.ctx = ctx;
-        this.x = 100;
-        this.y = 100;
+        this.x = ctx.canvas.width/2;
+        this.y = ctx.canvas.height/2;
         this.h = new Heading();
         this.pen_down = true;
     }
-    
+    push() {
+		this.turtle_stack.push([this.x, this.y, this.h]);
+	}
+    pop() {
+		let pos = this.turtle_stack.pop();
+		this.x = pos[0];
+		this.y = pos[1];
+		this.h = pos[2];
+	}
     fd(dist: number) {
-		  this.ctx.beginPath();
-		  this.ctx.moveTo(this.x, this.y);
-      this.x = this.x + dist * Math.cos(this.h.rad);
-      this.y = this.y + dist * Math.sin(this.h.rad);
+		this.ctx.beginPath();
+		this.ctx.moveTo(this.x, this.y);
+		this.x = this.x + dist * Math.cos(this.h.rad);
+		this.y = this.y + dist * Math.sin(this.h.rad);
 
-		  if (this.pen_down) {
-  		  this.ctx.lineTo(this.x, this.y);
-  		  this.ctx.stroke();
-		  }
-		  else {
-		    this.ctx.moveTo(this.x, this.y);
-		  }
-    }
+		if (this.pen_down) {
+			this.ctx.lineTo(this.x, this.y);
+			this.ctx.stroke();
+		}
+		else {
+			this.ctx.moveTo(this.x, this.y);
+		}
+	}
+	bk(dist: number) {
+		this.fd(-dist);
+	}
     rt(turn: number) {
-      this.h.add(turn);
-    }
+		this.h.add(turn);
+	}
     lt(turn: number) {
       this.h.add(-turn);
     }
@@ -60,14 +72,83 @@ cav.style.background = '#bbbbbb';
 document.body.appendChild(cav);
 ctx = cav.getContext("2d");
 var yurt = new Turtle(ctx);
-yurt.fd(50);
-yurt.rt(90);
-yurt.fd(30);
-yurt.rt(90);
-yurt.fd(40);
+function pent(tick: number) {
+	return tick * 36;
+}
+function w1(t: Turtle, scale: number, level: number) {
+	if (!level) {
+		t.push();
+		t.rt(pent(1));
+		t.pd();
+		t.fd(scale);
+		t.pu();
+		t.pop();
+	}
+	else {
+		let s = scale * 0.61803399;
+		let l = level - 1;
+		t.push();
+		t.lt(pent(3));
+		t.bk(scale);
+		w34(t, s, l);
+		t.pop();
+		t.lt(pent(5));
+		t.bk(scale);
+		t4(t, s, l);
+		t.pop();
+	}
+}
+function w34(t: Turtle, scale: number, level: number) {
+	if (!level) {
+		t.push();
+		t.fd(scale * 1.61803399)
+		t.lt(pent(4));
+		t.pd();
+		t.fd(scale);
+		t.lt(pent(2));
+		t.fd(scale);
+		t.pu();
+		t.pop();
+	}
+	else {
+		let s = scale * 0.61803399;
+		let l = level - 1;
+		t.push();
+		t.lt(pent(3));
+		t.bk(scale);
+		// w34(t, s, l);
+		t.pop();
+		t.lt(pent(5));
+		t.bk(scale);
+		// t4();
+		t.pop();	
+	}	
+}
+function t4(t: Turtle, scale: number, level: number) {
+	if (!level) {
+		t.push();
+		t.rt(pent(3));
+		t.bk(scale);
+		t.pd();
+		t.fd(scale);
+		t.pu();
+		t.pop();
+	}
+	else {
+		let s = scale * 0.61803399;
+		let l = level - 1;
+		t.push();
+		t.lt(pent(3));
+		t.bk(scale);
+		// w34(t, s, l);
+		t.pop();
+		t.lt(pent(5));
+		t.bk(scale);
+		// t4();
+		t.pop();	
+	}	
+}
 yurt.pu();
-yurt.rt(90);
-yurt.fd(40);
-yurt.pd();
-yurt.rt(90);
-yurt.fd(40);
+//w34(yurt, 160, 0);
+//t4 (yurt, 160, 0);
+w1(yurt, 160, 1);
