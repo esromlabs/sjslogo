@@ -163,15 +163,17 @@ function t2w2(t: Turtle, scale: number, level: number) {
 	}
 	else {
 		t.push();
-		t.lt(pent(3));
-		t.bk(scale);
-		// w34(t, s, l);
+		t.fd(s);
+		t.rt(pent(1));
+		t.fd(s);
+		t.rt(pent(3));
+		w34(t, s, l);
 		t.pop();
 
 		t.push();
 		t.lt(pent(5));
-		t.bk(scale);
-		// t4();
+		t.bk(scale * 1.61803399);
+		w4(t, s);
 		t.pop();	
 	}	
 }
@@ -197,10 +199,19 @@ function w2(t: Turtle, s: number) {
 	t.pu();
 	t.pop();
 }
+function w4(t: Turtle, s: number) {
+	t.push();
+	t.rt(pent(4));
+	t.bk(s);
+	t.pd();
+	t.fd(s);
+	t.pu();
+	t.pop();
+}
 yurt.pu();
 //w34(yurt, 160, 0);
 //t4 (yurt, 160, 0);
 //t2(yurt, 160);
 //w2(yurt, 160);
-w1(yurt, 160, 2);
+w1(yurt, 160, 3);
 
