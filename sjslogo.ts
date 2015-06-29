@@ -173,7 +173,7 @@ function t2w2(t: Turtle, scale: number, level: number) {
 		t.push();
 		t.lt(pent(5));
 		t.bk(scale * 1.61803399);
-		w4(t, s);
+		w4(t, s, l);
 		t.pop();	
 	}	
 }
@@ -199,19 +199,47 @@ function w2(t: Turtle, s: number) {
 	t.pu();
 	t.pop();
 }
-function w4(t: Turtle, s: number) {
+function w3(t: Turtle, scale: number, level: number) {
 	t.push();
 	t.rt(pent(4));
-	t.bk(s);
+	t.bk(scale);
+	t.rt(pent(2));
+	t.bk(scale);
 	t.pd();
-	t.fd(s);
+	t.fd(scale);
 	t.pu();
 	t.pop();
+}
+function w4(t: Turtle, scale: number, level: number) {
+	let s = scale * 0.61803399;
+	let l = level - 1;
+	if (!level) {
+		t.push();
+		t.rt(pent(4));
+		t.bk(scale);
+		t.pd();
+		t.fd(scale);
+		t.pu();
+		t.pop();
+	}
+	else {
+		t.push();
+		t.fd(scale * 1.61803399);
+		t.lt(pent(4));
+		w3(t, s, l);
+		t.pop();
+
+		t.push();
+		t.lt(pent(4));
+		t.bk(scale);
+		t2w2(t, s, l);
+		t.pop();	
+	}
 }
 yurt.pu();
 //w34(yurt, 160, 0);
 //t4 (yurt, 160, 0);
 //t2(yurt, 160);
 //w2(yurt, 160);
-w1(yurt, 160, 3);
+w1(yurt, 160, 4);
 
