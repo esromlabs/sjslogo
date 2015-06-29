@@ -59,8 +59,8 @@ var Turtle = (function () {
 var ctx;
 var cav = document.createElement('canvas');
 cav.id = "myCanvas";
-cav.width = 600;
-cav.height = 400;
+cav.width = 1000;
+cav.height = 660;
 cav.style.border = "1px solid #d3d3d3";
 cav.style.background = '#bbbbbb';
 document.body.appendChild(cav);
@@ -149,19 +149,21 @@ function t2w2(t, scale, level) {
         t.lt(pent(2));
         t.fd(scale);
         t.rt(pent(3));
-        w2(t, scale);
+        w2(t, scale, level);
         t.pop();
     }
     else {
         t.push();
-        t.lt(pent(3));
-        t.bk(scale);
-        // w34(t, s, l);
+        t.fd(s);
+        t.rt(pent(1));
+        t.fd(s);
+        t.rt(pent(3));
+        w34(t, s, l);
         t.pop();
         t.push();
         t.lt(pent(5));
-        t.bk(scale);
-        // t4();
+        t.bk(scale * 1.61803399);
+        w4(t, s, l);
         t.pop();
     }
 }
@@ -176,20 +178,104 @@ function t2(t, s) {
     t.pu();
     t.pop();
 }
-function w2(t, s) {
-    t.push();
-    t.rt(pent(1));
-    t.fd(s);
-    t.rt(pent(3));
-    t.bk(s);
-    t.pd();
-    t.fd(s);
-    t.pu();
-    t.pop();
+function w2(t, scale, level) {
+    var s = scale * 0.61803399;
+    var l = level - 1;
+    if (!level) {
+        t.push();
+        t.rt(pent(1));
+        t.fd(scale);
+        t.rt(pent(3));
+        t.bk(scale);
+        t.pd();
+        t.fd(scale);
+        t.pu();
+        t.pop();
+    }
+    else {
+        t.push();
+        t.fd(scale * 1.61803399);
+        t.rt(pent(4));
+        w34(t, s, l);
+        t.pop();
+    }
 }
+function w3(t, scale, level) {
+    var s = scale * 0.61803399;
+    var l = level - 1;
+    if (!level) {
+        t.push();
+        t.rt(pent(4));
+        t.bk(scale);
+        t.rt(pent(2));
+        t.bk(scale);
+        t.pd();
+        t.fd(scale);
+        t.pu();
+        t.pop();
+    }
+    else {
+        t.push();
+        t.fd(scale * 1.61803399);
+        t.rt(pent(4));
+        w1t4(t, s, l);
+        t.pop();
+    }
+}
+function w4(t, scale, level) {
+    var s = scale * 0.61803399;
+    var l = level - 1;
+    if (!level) {
+        t.push();
+        t.rt(pent(4));
+        t.bk(scale);
+        t.pd();
+        t.fd(scale);
+        t.pu();
+        t.pop();
+    }
+    else {
+        t.push();
+        t.fd(scale * 1.61803399);
+        t.lt(pent(4));
+        w3(t, s, l);
+        t.pop();
+        t.push();
+        t.lt(pent(4));
+        t.bk(scale);
+        t2w2(t, s, l);
+        t.pop();
+    }
+}
+function w1t4(t, scale, level) {
+    var s = scale * 0.61803399;
+    var l = level - 1;
+    if (!level) {
+        w1(t, scale, level);
+        t.push();
+        t.rt(pent(1));
+        t.fd(scale);
+        t.rt(pent(2));
+        t.fd(scale);
+        t.lt(pent(3));
+        t4(t, scale, level);
+        t.pop();
+    }
+    else {
+        t.push();
+        t.rt(pent(2));
+        t.fd(scale);
+        t.rt(pent(5));
+        w34(t, s, l);
+        t.bk(s);
+        t.rt(pent(1));
+        w4(t, s, l);
+        t.pop();
+    }
+}
+var level = 7;
 yurt.pu();
-//w34(yurt, 160, 0);
-//t4 (yurt, 160, 0);
-//t2(yurt, 160);
-//w2(yurt, 160);
-w1(yurt, 160, 2);
+yurt.bk(260);
+w1(yurt, 350, level);
+w2(yurt, 350, level);
+w34(yurt, 350, level);
