@@ -65,8 +65,8 @@ class Turtle {
 var ctx: CanvasRenderingContext2D;
 var cav = document.createElement('canvas');
 cav.id = "myCanvas";
-cav.width = 600;
-cav.height = 400;
+cav.width = 1000;
+cav.height = 660;
 cav.style.border = "1px solid #d3d3d3";
 cav.style.background = '#bbbbbb';
 document.body.appendChild(cav);
@@ -200,15 +200,26 @@ function w2(t: Turtle, s: number) {
 	t.pop();
 }
 function w3(t: Turtle, scale: number, level: number) {
-	t.push();
-	t.rt(pent(4));
-	t.bk(scale);
-	t.rt(pent(2));
-	t.bk(scale);
-	t.pd();
-	t.fd(scale);
-	t.pu();
-	t.pop();
+	let s = scale * 0.61803399;
+	let l = level - 1;
+	if (!level) {
+		t.push();
+		t.rt(pent(4));
+		t.bk(scale);
+		t.rt(pent(2));
+		t.bk(scale);
+		t.pd();
+		t.fd(scale);
+		t.pu();
+		t.pop();
+	}
+	else {
+		t.push();
+		t.fd(scale * 1.61803399);
+		t.rt(pent(4));
+		w1t4(t, s, l);
+		t.pop();
+	}
 }
 function w4(t: Turtle, scale: number, level: number) {
 	let s = scale * 0.61803399;
@@ -236,10 +247,38 @@ function w4(t: Turtle, scale: number, level: number) {
 		t.pop();	
 	}
 }
+function w1t4(t: Turtle, scale: number, level: number) {
+	let s = scale * 0.61803399;
+	let l = level - 1;
+	if (!level) {
+		w1(t, scale, level);
+		t.push();
+		t.rt(pent(1));
+		t.fd(scale);
+		t.rt(pent(2));
+		t.fd(scale);
+		t.lt(pent(3));
+		t4(t, scale, level);
+		t.pop();
+	}
+	else {
+		t.push();
+		t.rt(pent(2));
+		t.fd(scale);
+		t.rt(pent(5));
+		w34(t, s, l);
+		t.bk(s);
+		t.rt(pent(1));
+		w4(t, s, l);
+		t.pop();	
+	}
+}
+var level = 6;
 yurt.pu();
-//w34(yurt, 160, 0);
+yurt.bk(100);
+w1(yurt, 160, 0);
+w34(yurt, 160, level);
 //t4 (yurt, 160, 0);
 //t2(yurt, 160);
 //w2(yurt, 160);
-w1(yurt, 160, 4);
-
+w1(yurt, 160, level);
