@@ -158,7 +158,7 @@ function t2w2(t: Turtle, scale: number, level: number) {
 		t.lt(pent(2));
 		t.fd(scale);
 		t.rt(pent(3));
-		w2(t, scale);
+		w2(t, scale, level);
 		t.pop();
 	}
 	else {
@@ -188,16 +188,27 @@ function t2(t: Turtle, s: number) {
 	t.pu();
 	t.pop();
 }
-function w2(t: Turtle, s: number) {
-	t.push();
-	t.rt(pent(1));
-	t.fd(s);
-	t.rt(pent(3));
-	t.bk(s);
-	t.pd();
-	t.fd(s);
-	t.pu();
-	t.pop();
+function w2(t: Turtle, scale: number, level: number) {
+	let s = scale * 0.61803399;
+	let l = level - 1;
+	if (!level) {
+		t.push();
+		t.rt(pent(1));
+		t.fd(scale);
+		t.rt(pent(3));
+		t.bk(scale);
+		t.pd();
+		t.fd(scale);
+		t.pu();
+		t.pop();
+	}
+	else {
+		t.push();
+		t.fd(scale * 1.61803399);
+		t.rt(pent(4));
+		w34(t, s, l);
+		t.pop();		
+	}
 }
 function w3(t: Turtle, scale: number, level: number) {
 	let s = scale * 0.61803399;
@@ -273,12 +284,9 @@ function w1t4(t: Turtle, scale: number, level: number) {
 		t.pop();	
 	}
 }
-var level = 6;
+var level = 7;
 yurt.pu();
-yurt.bk(100);
-w1(yurt, 160, 0);
-w34(yurt, 160, level);
-//t4 (yurt, 160, 0);
-//t2(yurt, 160);
-//w2(yurt, 160);
-w1(yurt, 160, level);
+yurt.bk(260);
+w1(yurt, 350, level);
+w2(yurt, 350, level);
+w34(yurt, 350, level);
