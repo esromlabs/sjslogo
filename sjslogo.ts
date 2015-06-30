@@ -227,3 +227,5 @@ yurt.bk(260);
 w1(yurt, 350, level);
 w2(yurt, 350, level);
 w34(yurt, 350, level);
+var po = document.getElementById('path_output');
+po.appendChild(document.createTextNode(yurt.text_path));
