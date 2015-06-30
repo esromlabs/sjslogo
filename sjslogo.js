@@ -215,9 +215,11 @@ function w1t4(t, scale, level) {
         t.pop();
     }
 }
-var level = 8;
+var level = 7;
 yurt.pu();
 yurt.bk(260);
 w1(yurt, 350, level);
 w2(yurt, 350, level);
 w34(yurt, 350, level);
+var po = document.getElementById('path_output');
+po.appendChild(document.createTextNode(yurt.text_path));
