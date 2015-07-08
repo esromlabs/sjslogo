@@ -15,7 +15,8 @@ just the simple turtle commands on a Javascript environment
 <script>
   (function on_load($) {
    $('#process').on('click', function() {
-     eval($('logo_code').text());
+     var code = $('logo_code').text();
+     eval(code);
    });
   })(jQuery);
 </script>
