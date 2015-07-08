@@ -7,8 +7,16 @@
 <h1>simple Javascript Logo</h1>
 just the simple turtle commands on a Javascript environment
 <!-- <canvas width="600" height="400" /> -->
-<textarea></textarea>
+<textarea id="logo_code"></textarea><button id="process">process</button>
 </body>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="turtle.js"></script>
-<script src="sjslogo.js"></script>
+<!-- script src="sjslogo.js"></script -->
+<script>
+  (function on_load($) {
+   $('#process').on('click', function() {
+     eval($('logo_code').text());
+   });
+  })(JQuery);
+</script>
 </html>
