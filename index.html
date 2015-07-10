@@ -8,21 +8,18 @@
 just the simple turtle commands on a Javascript environment
 <!-- <canvas width="600" height="400" /> -->
 <textarea id="logo_code">
-function test() {
-  var ctx;
-  var cav = $('canvas');
-  cav.attr( "id", "myCanvas");
-  cav.attr( "width", "1000");
-  cav.attr( "height", "660");
-  cav.attr( "style", "border: 1px solid #d3d3d3; background: #bbbbbb");
-  $('body').append(cav);
-  ctx = cav[0].getContext("2d");
-  var yurt = new Turtle(ctx);
-  yurt.pd();
-  yurt.fd(260);
-}
-// and then test it
-test();
+var yurt, ctx;
+var cav = $('<canvas></canvas>');
+cav.attr( "id", "myCanvas");
+cav.attr( "width", "1000");
+cav.attr( "height", "660");
+cav.attr( "style", "border: 1px solid #d3d3d3; background: #bbbbbb");
+ctx = cav[0].getContext("2d");
+$('body').append(cav);
+// make a turtle and hit the ground...
+yurt = new Turtle(ctx);
+yurt.pd();
+yurt.fd(260);
 </textarea><button id="process">process</button>
 </body>
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
