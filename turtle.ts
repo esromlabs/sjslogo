@@ -2,7 +2,7 @@
 class Heading {
 	rad: number;
 	constructor() { this.rad = Math.PI * 1.5; }
-	add(degrees: number) { 
+	add(degrees: number) {
 		this.rad += degrees * 0.0174532925;
 	}
 }
@@ -76,3 +76,15 @@ class Turtle {
       this.pen_down = true;
     }
 }
+// now make a turtle named yurt and a canvas and a 2d graphic context
+var yurt, ctx;
+var cav = $('<canvas></canvas>');
+cav.attr( "id", "myCanvas");
+cav.attr( "width", "1000");
+cav.attr( "height", "660");
+cav.attr( "style", "border: 1px solid #d3d3d3; background: #bbbbbb");
+
+ctx = cav[0].getContext("2d");
+$('body').append(cav);
+
+var yurt = new Turtle(ctx);

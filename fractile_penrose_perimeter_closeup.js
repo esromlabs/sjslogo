@@ -1,15 +1,3 @@
-  var yurt, ctx;
-
-  var cav = $('<canvas></canvas>');
-  cav.attr( "id", "myCanvas");
-  cav.attr( "width", "1000");
-  cav.attr( "height", "660");
-  cav.attr( "style", "border: 1px solid #d3d3d3; background: #bbbbbb");
- 
-  ctx = cav[0].getContext("2d");
-  $('body').append(cav);
-
-  var yurt = new Turtle(ctx);
 function pent(tick) {
     return tick * 36;
 }
@@ -217,7 +205,7 @@ function w1t4(t, scale, level) {
         t.pop();
     }
 }
-var level = 21;
+var level = 17;
 yurt.pu();
 //yurt.bk(50);
 w1(yurt, 100000, level);
