@@ -66,6 +66,11 @@ var Turtle = (function () {
     Turtle.prototype.pd = function () {
         this.pen_down = true;
     };
+    Turtle.prototype.home = function () {
+        this.x = ctx.canvas.width / 2;
+        this.y = ctx.canvas.height / 2;
+        this.h = new Heading();
+    };
     return Turtle;
 })();
 // now make a turtle named yurt and a canvas and a 2d graphic context

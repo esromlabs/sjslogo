@@ -75,6 +75,11 @@ class Turtle {
     pd() {
       this.pen_down = true;
     }
+		home() {
+			this.x = ctx.canvas.width/2;
+			this.y = ctx.canvas.height/2;
+			this.h = new Heading();
+		}
 }
 // now make a turtle named yurt and a canvas and a 2d graphic context
 var yurt, ctx;
