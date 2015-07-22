@@ -43,7 +43,7 @@ class Turtle {
 			this.x !== this.last_x ||
 			this.y !== this.last_y)) {
 			// start a path
-			this.text_path += "m" + this.x + " " + this.y;
+			this.text_path += " m" + this.x + " " + this.y;
 		}
 		this.x = this.x + dist * Math.cos(this.h.rad);
 		this.y = this.y + dist * Math.sin(this.h.rad);
@@ -52,7 +52,7 @@ class Turtle {
 			this.ctx.lineTo(this.x, this.y);
 			this.ctx.stroke();
 			// start a path
-			this.text_path += "l" + this.x + " " + this.y;
+			this.text_path += " l" + this.x + " " + this.y;
 			this.last_x = this.x;
 			this.last_y = this.y;
 		}
@@ -75,14 +75,38 @@ class Turtle {
     pd() {
       this.pen_down = true;
     }
-		home() {
-			this.x = ctx.canvas.width/2;
-			this.y = ctx.canvas.height/2;
-			this.h = new Heading();
+	home() {
+		this.x = ctx.canvas.width/2;
+		this.y = ctx.canvas.height/2;
+		this.h = new Heading();
+	}
+	arc(opt) {
+		this.ctx.beginPath();
+		this.ctx.moveTo(this.x, this.y);
+		if (this.pen_down && (
+			this.x !== this.last_x ||
+			this.y !== this.last_y)) {
+			// start a path
+			this.text_path += " m" + this.x + " " + this.y;
 		}
+		this.x = this.x + dist * Math.cos(this.h.rad);
+		this.y = this.y + dist * Math.sin(this.h.rad);
+
+		if (this.pen_down) {
+			this.ctx.arcTo(this.x, this.y, opt.to.x, opt.to.y, opt.radius);
+			this.ctx.stroke();
+			// start a path
+			this.text_path += " arcto" + this.x + " " + this.y;
+			this.last_x = this.x;
+			this.last_y = this.y;
+		}
+		else {
+			this.ctx.moveTo(this.x, this.y);
+		}
+	}
 }
 // now make a turtle named yurt and a canvas and a 2d graphic context
-var yurt, ctx;
+
 var cav = $('<canvas></canvas>');
 cav.attr( "id", "myCanvas");
 cav.attr( "width", "1000");
