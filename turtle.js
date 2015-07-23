@@ -79,19 +79,23 @@ var Turtle = (function () {
             // start a path
             this.text_path += " m" + this.x + " " + this.y;
         }
+        var center_x = this.x + opt.radius * Math.cos(this.h.rad+Math.PI*0.5);
+        var center_y = this.y + opt.radius * Math.sin(this.h.rad+Math.PI*0.5);
+        var end_x = this.x + opt.radius * Math.cos(this.h.rad+Math.PI*1.5);
+        var end_y = this.y + opt.radius * Math.sin(this.h.rad+Math.PI*1.5);
         if (this.pen_down) {
-            this.ctx.arcTo(this.x, this.y, opt.to.x, opt.to.y, opt.radius);
+            this.ctx.arc(center_x, center_y, opt.radius, this.h.rad, opt.end_angle);
             this.ctx.stroke();
             // start a path
-            this.text_path += " arcto" + this.x + " " + this.y;
-            this.x = opt.to.x;
-            this.y = opt.to.y;
-            this.last_x = this.x;
-            this.last_y = this.y;
+            //this.text_path += " arcto" + this.x + " " + this.y;
         }
         else {
             this.ctx.moveTo(opt.to.x, opt.to.y);
         }
+        this.x = end_x;
+        this.y = end_y;
+        this.last_x = this.x;
+        this.last_y = this.y;
     };
     return Turtle;
 })();
