@@ -72,19 +72,18 @@ var Turtle = (function () {
         this.h = new Heading();
     };
     Turtle.prototype.arc = function (opt) {
+        var center_x, center_y;
+        var heading_to_center;
+        opt = opt || {radius:40, turn:"r", angle:1.57};
+        heading_to_center = opt.turn === "r"? this.h.rad+Math.PI*0.5: this.h.rad-Math.PI*0.5;
         this.ctx.beginPath();
         this.ctx.moveTo(this.x, this.y);
-        if (this.pen_down && (this.x !== this.last_x ||
-            this.y !== this.last_y)) {
-            // start a path
-            this.text_path += " m" + this.x + " " + this.y;
-        }
-        var center_x = this.x + opt.radius * Math.cos(this.h.rad+Math.PI*0.5);
-        var center_y = this.y + opt.radius * Math.sin(this.h.rad+Math.PI*0.5);
+        center_x = this.x + opt.radius * Math.cos(heading_to_center);
+        center_y = this.y + opt.radius * Math.sin(heading_to_center);
         var end_x = this.x + opt.radius * Math.cos(this.h.rad+Math.PI*1.5);
         var end_y = this.y + opt.radius * Math.sin(this.h.rad+Math.PI*1.5);
         if (this.pen_down) {
-            this.ctx.arc(center_x, center_y, opt.radius, this.h.rad, opt.end_angle);
+            this.ctx.arc(center_x, center_y, opt.radius, this.h.rad, this.h.rad + opt.angle);
             this.ctx.stroke();
             // start a path
             //this.text_path += " arcto" + this.x + " " + this.y;
