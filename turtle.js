@@ -74,16 +74,21 @@ var Turtle = (function () {
     Turtle.prototype.arc = function (opt) {
         var center_x, center_y;
         var heading_to_center;
-        opt = opt || {radius:40, turn:"r", angle:1.57};
+        var start_angle, end_angle;
+        // default options are a 90 degree right turn of readius = 40 pixles.
+        opt = opt || {radius:40, turn:"r", angle:Math.PI*0.5};
         heading_to_center = opt.turn === "r"? this.h.rad+Math.PI*0.5: this.h.rad-Math.PI*0.5;
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.x, this.y);
+        start_angle = heading_to_center - Math.PI;
+        end_angle = start_angle + opt.angle;
+        alert(heading_to_center);
         center_x = this.x + opt.radius * Math.cos(heading_to_center);
         center_y = this.y + opt.radius * Math.sin(heading_to_center);
         var end_x = this.x + opt.radius * Math.cos(this.h.rad+Math.PI*1.5);
         var end_y = this.y + opt.radius * Math.sin(this.h.rad+Math.PI*1.5);
         if (this.pen_down) {
-            this.ctx.arc(center_x, center_y, opt.radius, this.h.rad, this.h.rad + opt.angle);
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.x, this.y);
+            this.ctx.arc(center_x, center_y, opt.radius, start_angle, end_angle);
             this.ctx.stroke();
             // start a path
             //this.text_path += " arcto" + this.x + " " + this.y;

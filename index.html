@@ -1,22 +1,25 @@
-<!DOCTYPE html>
+<!dOCTypE html>
 <html lang="en">
 <head>
-<title>simple JS Logo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>simple JS Logo</title>
+
+  <link rel="stylesheet" href="css/pure-release-0.6.0/pure-min.css">
 </head>
 <body>
 <h1>simple Javascript Logo</h1>
 just the simple turtle commands on a Javascript environment
 <!-- <canvas width="600" height="400" /> -->
 <textarea id="logo_code" rows="7" cols="100" style:"width:500; height:200;">
-// You have a turtle named 'yurt' at the ready.
-yurt.home();
-yurt.pd(); // pen down
-yurt.fd(60); // move ahead
-yurt.rt(20); //turn right
-yurt.fd(60); // move ahead
-yurt.rt(20); //turn right
-yurt.arc({radius:40, turn:"r", angle:1.5});
-</textarea><button id="process">process</button>
+  // You have a turtle named 'yurt' at the ready.
+  yurt.home();
+  yurt.pd(); // pen down
+  yurt.rt(45); //turn right
+  yurt.fd(50);
+  yurt.arc({radius:50, turn:"r", angle:Math.PI*0.5});
+  </textarea><button id="process">process</button>
 </body>
 <script src="js/jquery.js"></script>
 <script src="turtle.js"></script>
