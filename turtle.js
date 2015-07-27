@@ -67,35 +67,36 @@ var Turtle = (function () {
         this.pen_down = true;
     };
     Turtle.prototype.home = function () {
-        this.x = ctx.canvas.width / 2;
-        this.y = ctx.canvas.height / 2;
+        this.x = this.ctx.canvas.width / 2;
+        this.y = this.ctx.canvas.height / 2;
         this.h = new Heading();
     };
     Turtle.prototype.arc = function (opt) {
         var center_x, center_y;
         var heading_to_center;
         var start_angle, end_angle;
-        // default options are a 90 degree right turn of readius = 40 pixles.
-        opt = opt || {radius:40, turn:"r", angle:Math.PI*0.5};
-        heading_to_center = opt.turn === "r"? this.h.rad+Math.PI*0.5: this.h.rad-Math.PI*0.5;
+        var end_x, end_y;
+        var antiCW = false;
+        // default options are a 90 degree right turn of radius of 50 pixles.
+        opt = opt || { radius: 50, turn: "r", angle: Math.PI * 0.5 };
+        if (opt.turn !== 'r') {
+            antiCW = true;
+        }
+        heading_to_center = (opt.turn === "r") ? this.h.rad + Math.PI * 0.5 : this.h.rad - Math.PI * 0.5;
         start_angle = heading_to_center - Math.PI;
         end_angle = start_angle + opt.angle;
-        alert(heading_to_center);
+        //alert(heading_to_center);
         center_x = this.x + opt.radius * Math.cos(heading_to_center);
         center_y = this.y + opt.radius * Math.sin(heading_to_center);
-        var end_x = this.x + opt.radius * Math.cos(this.h.rad+Math.PI*1.5);
-        var end_y = this.y + opt.radius * Math.sin(this.h.rad+Math.PI*1.5);
+        end_x = center_x + opt.radius * Math.cos(end_angle);
+        end_y = center_y + opt.radius * Math.sin(end_angle);
         if (this.pen_down) {
-          this.ctx.beginPath();
-          this.ctx.moveTo(this.x, this.y);
-            this.ctx.arc(center_x, center_y, opt.radius, start_angle, end_angle);
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.x, this.y);
+            this.ctx.arc(center_x, center_y, opt.radius, start_angle, end_angle, antiCW);
             this.ctx.stroke();
-            // start a path
-            //this.text_path += " arcto" + this.x + " " + this.y;
         }
-        else {
-            this.ctx.moveTo(opt.to.x, opt.to.y);
-        }
+        this.h.rad = (opt.turn === "r") ? end_angle + Math.PI * 0.5 : end_angle - Math.PI * 0.5;
         this.x = end_x;
         this.y = end_y;
         this.last_x = this.x;
