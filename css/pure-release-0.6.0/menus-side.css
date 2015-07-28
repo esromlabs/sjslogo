@@ -39,7 +39,7 @@ This is the parent `<div>` that contains the menu and the content area.
 The content `<div>` is where all your content goes.
 */
 .content {
-    margin: 0 auto;
+    margin: 0;
     padding: 0 2em;
     max-width: 800px;
     margin-bottom: 50px;
@@ -206,7 +206,7 @@ small screens.
 /*
 Hides the menu at `48em`, but modify this based on your app's needs.
 */
-@media (min-width: 48em) {
+@media (min-width: 1200px) {
 
     .header,
     .content {
@@ -233,7 +233,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 }
 
-@media (max-width: 48em) {
+@media (max-width: 1200px) {
     /* Only apply this when the window is small. Otherwise, the following
     case results in extra padding on the left:
         * Make the window small.

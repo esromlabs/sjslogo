@@ -55,7 +55,7 @@
 
   <div class="content">
 
-<textarea id="logo_code" rows="7" cols="80" style:"width:100%; height:100%;">
+<textarea id="logo_code" rows="7" cols="80"  style:"width:1000px; height:50px;">
 // You have a turtle named 'yurt' at the ready.
 yurt.home();
 yurt.pd(); // pen down
@@ -87,8 +87,10 @@ yurt.fd(50);
 	var run_sjslogo = function (env, code) {
 		// Shadow some sensitive global objects
 		var locals = {
-			window: {},
-			document: {}
+			"window": {},
+			"document": {},
+      "$": {},
+      "jQuery": {}
 		};
 		// and mix in the environment
 		locals = $.extend({}, locals, env);
