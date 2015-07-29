@@ -66,19 +66,22 @@ class Turtle {
     rt(turn: number) {
 		this.h.add(turn);
 	}
-    lt(turn: number) {
-      this.h.add(-turn);
-    }
-    pu() {
-      this.pen_down = false;
-    }
-    pd() {
-      this.pen_down = true;
-    }
+  lt(turn: number) {
+    this.h.add(-turn);
+  }
+  pu() {
+    this.pen_down = false;
+  }
+  pd() {
+    this.pen_down = true;
+  }
 	home() {
 		this.x = this.ctx.canvas.width/2;
 		this.y = this.ctx.canvas.height/2;
 		this.h = new Heading();
+	}
+	cs() {
+    	this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 	}
 	arc(opt) {
 		var center_x, center_y;

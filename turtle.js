@@ -71,6 +71,9 @@ var Turtle = (function () {
         this.y = this.ctx.canvas.height / 2;
         this.h = new Heading();
     };
+    Turtle.prototype.cs = function () {
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    };
     Turtle.prototype.arc = function (opt) {
         var center_x, center_y;
         var heading_to_center;
@@ -106,12 +109,10 @@ var Turtle = (function () {
 })();
 // now make a turtle named yurt and a canvas and a 2d graphic context
 var cav = $('<canvas></canvas>');
-cav.attr( "id", "myCanvas");
-cav.attr( "width", "1000");
-cav.attr( "height", "660");
-cav.attr( "style", "border: 1px solid #d3d3d3; background: #bbbbbb");
-
+cav.attr("id", "myCanvas");
+cav.attr("width", "1000");
+cav.attr("height", "660");
+cav.attr("style", "border: 1px solid #d3d3d3; background: #bbbbbb");
 ctx = cav[0].getContext("2d");
 $('#turtlerarium').append(cav);
-
 var yurt = new Turtle(ctx);
