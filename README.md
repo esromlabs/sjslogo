@@ -7,4 +7,4 @@ snabt.js
 paper.js 
 three.js
 
-or ...
+or build own yurtle.js somewhere between paperJS and threeJS.
