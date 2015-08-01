@@ -2,6 +2,9 @@
 class Heading {
 	rad: number;
 	constructor() { this.rad = Math.PI * 1.5; }
+	set(degrees: number) {
+		this.rad = degrees * 0.0174532925;
+	}
 	add(degrees: number) {
 		this.rad += degrees * 0.0174532925;
 	}
@@ -87,14 +90,22 @@ class Turtle {
 		var center_x, center_y;
 		var heading_to_center;
 		var start_angle, end_angle;
+		var range = new Heading();
+		range.set(opt.angle);
 		var end_x, end_y;
-		var antiCW = false;
-		// default options are a 90 degree right turn of radius of 50 pixles.
+		var anti_CW = false;
+		// default options are a 90 degree right turn of radius of 50 pixels.
 		opt = opt || {radius:50, turn:"r", angle:Math.PI*0.5};
-		if (opt.turn !== 'r') {antiCW = true;}
+		if (opt.turn !== 'r') {anti_CW = true;}
 		heading_to_center = (opt.turn === "r")? this.h.rad+Math.PI*0.5: this.h.rad-Math.PI*0.5;
 		start_angle = heading_to_center - Math.PI;
-		end_angle = start_angle + opt.angle;
+		if (opt.turn === 'r') {
+			end_angle = start_angle + range.rad;
+		}
+		else {
+			end_angle = start_angle - range.rad;
+		}
+
 		//alert(heading_to_center);
 		center_x = this.x + opt.radius * Math.cos(heading_to_center);
 		center_y = this.y + opt.radius * Math.sin(heading_to_center);
@@ -103,7 +114,7 @@ class Turtle {
 		if (this.pen_down) {
 			this.ctx.beginPath();
 			this.ctx.moveTo(this.x, this.y);
-				this.ctx.arc(center_x, center_y, opt.radius, start_angle, end_angle, antiCW);
+				this.ctx.arc(center_x, center_y, opt.radius, start_angle, end_angle, anti_CW);
 				this.ctx.stroke();
 				// start a path
 				//this.text_path += " arc" + this.x + " " + this.y;
@@ -115,8 +126,8 @@ class Turtle {
 		this.last_y = this.y;
 	}
 }
-// now make a turtle named yurt and a canvas and a 2d graphic context
 
+// now make a turtle named yurt and a canvas and a 2d graphic context
 var cav = $('<canvas></canvas>');
 cav.attr( "id", "myCanvas");
 cav.attr( "width", "1000");

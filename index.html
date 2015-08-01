@@ -49,20 +49,28 @@
   </div>
   <div class="content">
 <textarea id="logo_code" rows="7" cols="100"  style:"width:1000px; height:50px;">
-// You have a turtle named 'yurt' at the ready.
-yurt.home();
-yurt.pd(); // pen down
-//yurt.rt(45); //turn right
-yurt.fd(50);
-yurt.arc({radius:50, turn:"r", angle:Math.PI*0.8});
-yurt.lt(45); //turn left
-yurt.arc({radius:30, turn:"l", angle:Math.PI*1.2});
-yurt.fd(50);
-yurt.arc({radius:50, turn:"r", angle:Math.PI*0.8});
-yurt.rt(45); //turn right
-yurt.arc({radius:30, turn:"l", angle:Math.PI*1.2});
-yurt.fd(50);
-
+  // You have a turtle named 'yurt' at the ready.
+  var t = 0;
+  while( t < 32 ) {
+    t += 1;
+    (function(t) {
+      setTimeout(function() {
+        yurt.home();
+        yurt.cs();
+        yurt.pd(); // pen down
+        yurt.rt(11.25*t); //turn right
+        yurt.fd(30);
+        yurt.arc({radius:50, turn:"r", angle:90});
+        yurt.lt(45); //turn left
+        yurt.arc({radius:30, turn:"l", angle:128});
+        yurt.fd(30);
+        yurt.arc({radius:50, turn:"r", angle:140});
+        yurt.rt(45); //turn right
+        yurt.arc({radius:30, turn:"l", angle:128});
+        yurt.fd(50);
+      }, 100*t);
+    })(t);
+  }
 </textarea>
 <button id="process">process</button>
 <div id="turtlerarium"></div>

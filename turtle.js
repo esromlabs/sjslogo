@@ -3,6 +3,9 @@ var Heading = (function () {
     function Heading() {
         this.rad = Math.PI * 1.5;
     }
+    Heading.prototype.set = function (degrees) {
+        this.rad = degrees * 0.0174532925;
+    };
     Heading.prototype.add = function (degrees) {
         this.rad += degrees * 0.0174532925;
     };
@@ -78,16 +81,23 @@ var Turtle = (function () {
         var center_x, center_y;
         var heading_to_center;
         var start_angle, end_angle;
+        var range = new Heading();
+        range.set(opt.angle);
         var end_x, end_y;
-        var antiCW = false;
-        // default options are a 90 degree right turn of radius of 50 pixles.
+        var anti_CW = false;
+        // default options are a 90 degree right turn of radius of 50 pixels.
         opt = opt || { radius: 50, turn: "r", angle: Math.PI * 0.5 };
         if (opt.turn !== 'r') {
-            antiCW = true;
+            anti_CW = true;
         }
         heading_to_center = (opt.turn === "r") ? this.h.rad + Math.PI * 0.5 : this.h.rad - Math.PI * 0.5;
         start_angle = heading_to_center - Math.PI;
-        end_angle = start_angle + opt.angle;
+        if (opt.turn === 'r') {
+            end_angle = start_angle + range.rad;
+        }
+        else {
+            end_angle = start_angle - range.rad;
+        }
         //alert(heading_to_center);
         center_x = this.x + opt.radius * Math.cos(heading_to_center);
         center_y = this.y + opt.radius * Math.sin(heading_to_center);
@@ -96,7 +106,7 @@ var Turtle = (function () {
         if (this.pen_down) {
             this.ctx.beginPath();
             this.ctx.moveTo(this.x, this.y);
-            this.ctx.arc(center_x, center_y, opt.radius, start_angle, end_angle, antiCW);
+            this.ctx.arc(center_x, center_y, opt.radius, start_angle, end_angle, anti_CW);
             this.ctx.stroke();
         }
         this.h.rad = (opt.turn === "r") ? end_angle + Math.PI * 0.5 : end_angle - Math.PI * 0.5;
