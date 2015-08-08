@@ -15,7 +15,7 @@ var T3D;
     T3D.Heading = Heading;
     var Camera = (function () {
         function Camera() {
-            this.y_ratio = 0.5;
+            this.y_ratio = 1.0;
         }
         Camera.prototype.transform = function (y) {
             return y * this.y_ratio;

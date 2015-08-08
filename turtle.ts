@@ -16,7 +16,7 @@ module T3D {
 		T3D.Heading = Heading;
 
 		class Camera {
-			y_ratio: number = 0.5;
+			y_ratio: number = 1.0;
 			transform(y:number):number {
 				return y*this.y_ratio;
 			}
