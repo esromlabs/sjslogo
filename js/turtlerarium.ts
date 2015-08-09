@@ -70,6 +70,60 @@ class Page {
     sandbox(); // call the user code in the sandbox
     return env;
   }
+}
 
+class Vector3 {
+  v:array = [];
+  constructor(v:Array) {
+    if (v) {
+      this.v[0] = v[0];
+      this.v[1] = v[1];
+      this.v[2] = v[2];
+    }
+    else {
+      this.v = [0,0,0];
+    }
+  }
+  applyProjection(matrix:Matrix33):Vector3 {
+    let ret_v = new Vector3();
+    ret_v[0] = matrix.m[0][0]*this.v[0] +  matrix.m[1][0]*this.v[1] +  matrix.m[2][0]*this.v[2];
+    ret_v[1] = matrix.m[0][1]*this.v[0] +  matrix.m[1][1]*this.v[1] +  matrix.m[2][1]*this.v[2];
+    ret_v[2] = matrix.m[0][2]*this.v[0] +  matrix.m[1][2]*this.v[1] +  matrix.m[2][2]*this.v[2];
+    return ret_v;
+  }
+}
+
+class Matrix33 {
+  m = [];
+  constructor() {
+    this.m = [[1,0,0], [0,1,0], [0,0,1]];
+  }
+  rotate(axis:string, angle:number) {
+    var c = Math.cos(angle), s = Math.sin(angle);
+    if (axis === 'x') {
+      this.m = [
+        [  1,  0,  0 ],
+        [  0,  c, -s ],
+        [  0,  s,  c ]
+      ];
+      return;
+    }
+    if (axis === 'y') {
+      this.m = [
+        [  c,  0,  s ],
+        [  0,  1,  0 ],
+        [ -s,  0,  c ]
+      ];
+      return;
+    }
+    if (axis === 'z') {
+      this.m = [
+        [  c, -s,  0 ],
+        [  s,  c,  0 ],
+        [  0,  0,  1 ]
+      ];
+      return;
+    }
+  }
 
 }
