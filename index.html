@@ -48,36 +48,14 @@
       <h2>Turtle commands in Javascript</h2>
   </div>
   <div class="content">
-<textarea id="logo_code" rows="7" cols="100"  style:"width:1000px; height:50px;">
-  // You have a turtle named 'yurt' at the ready.
-  var t = 0;
-  while( t < 32 ) {
-    t += 1;
-    (function(t) {
-      setTimeout(function() {
-        yurt.home();
-        yurt.cs();
-        yurt.pd(); // pen down
-        yurt.rt(11.25*t); //turn right
-        yurt.fd(30);
-        yurt.arc({radius:50, turn:"r", angle:90});
-        yurt.lt(45); //turn left
-        yurt.arc({radius:30, turn:"l", angle:128});
-        yurt.fd(30);
-        yurt.arc({radius:50, turn:"r", angle:140});
-        yurt.rt(45); //turn right
-        yurt.arc({radius:30, turn:"l", angle:128});
-        yurt.fd(50);
-      }, 100*t);
-    })(t);
-  }
-</textarea>
+<textarea id="logo_code" rows="7" cols="100"  style:"width:1000px; height:50px;"></textarea>
 <button id="process">process</button>
 <select id="how_about_this">
-  <option value="1">First Exaple</option>
-  <option value="2">now for some Curves</option>
-  <option value="3">Animation</option>
-  <option value="4">Penrose Tiling</option>
+  <option value="first">First Exaple</option>
+  <option value="curves">now for some Curves</option>
+  <option value="animation">Animation</option>
+  <option value="penrose_tiling">Penrose Tiling</option>
+  <option value="penrose_tiling_perimeter">Penrose Tiling Perimeter</option>
 </select>
 <div id="turtlerarium"></div>
 </div>

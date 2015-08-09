@@ -1,7 +1,7 @@
 var examples = {
-  "1":"// You have a turtle named 'yurt' at the ready.\nyurt.cs();\nyurt.home();\nyurt.pd();\nyurt.fd(20);\n",
-  "2":'yurt.home();\nyurt.cs();\nyurt.pd(); // pen down\nyurt.fd(30);\nyurt.arc({radius:50, turn:"r", angle:140});\nyurt.rt(45); //turn right\nyurt.arc({radius:30, turn:"l", angle:128});\nyurt.fd(50);\n',
-  "3":'var t = 0;\nwhile( t < 32 ) {\n  t += 1;\n  (function(t) {\n    setTimeout(function() {\n      yurt.home();\n      yurt.cs();\n      yurt.pd(); // pen down\n    yurt.rt(11.25*t); //turn right\n      yurt.fd(30);\n      yurt.arc({radius:50, turn:"r", angle:90});\n      yurt.lt(45); //turn left\n      yurt.arc({radius:30, turn:"l", angle:128});\n      yurt.fd(30);\n      yurt.arc({radius:50, turn:"r", angle:140});\n      yurt.rt(45); //turn right\n      yurt.arc({radius:30, turn:"l", angle:128});\n      yurt.fd(50);\n    }, 100*t);\n  })(t);\n}\n',
+  "first":"// You have a turtle named 'yurt' at the ready.\nyurt.pd();\nyurt.fd(20);\nyurt.rt(10)\n",
+  "curves":'yurt.home();\nyurt.cs();\nyurt.pd(); // pen down\nyurt.fd(30);\nyurt.arc({radius:50, turn:"r", angle:140});\nyurt.rt(45); //turn right\nyurt.arc({radius:30, turn:"l", angle:128});\nyurt.fd(50);\n',
+  "animation":'var t = 0;\nwhile( t < 32 ) {\n  t += 1;\n  (function(t) {\n    setTimeout(function() {\n      yurt.home();\n      yurt.cs();\n      yurt.pd(); // pen down\n    yurt.rt(11.25*t); //turn right\n      yurt.fd(30);\n      yurt.arc({radius:50, turn:"r", angle:90});\n      yurt.lt(45); //turn left\n      yurt.arc({radius:30, turn:"l", angle:128});\n      yurt.fd(30);\n      yurt.arc({radius:50, turn:"r", angle:140});\n      yurt.rt(45); //turn right\n      yurt.arc({radius:30, turn:"l", angle:128});\n      yurt.fd(50);\n    }, 100*t);\n  })(t);\n}\n',
   "4":"yurt.pd();\nyurt.fd(20);\n"
 };
 
@@ -12,24 +12,20 @@ class Page {
     this.$ = $;
     this.current_script_name = "first";
     var page = this;
+    $('#logo_code').val(examples[this.current_script_name]);
     $('#process').on('click', function() {
       var code = $('#logo_code').val();
       page.run_sjslogo({}, code);
     });
     $('#how_about_this').on('change', function() {
       //alert($(this).val());
-      var code = examples[$(this).val()];
+      this.current_script_name = $(this).val();
+      let code = examples[this.current_script_name];
       if (code) {
         $('#logo_code').val(code);
         page.run_sjslogo({}, code);
       }
     });
-
-  }
-  load_script(script_name:string) {
-    this.current_script_name = script_name;
-    // load into the editing area and run the script
-
   }
 
   // sandbox for functional (saferEval)
@@ -72,8 +68,9 @@ class Page {
   }
 }
 
+// classes for projection from 3D to 2D screen.
 class Vector3 {
-  v:array = [];
+  v:Array = [];
   constructor(v:Array) {
     if (v) {
       this.v[0] = v[0];
