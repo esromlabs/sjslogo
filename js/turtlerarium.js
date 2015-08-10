@@ -114,5 +114,13 @@ var Matrix33 = (function () {
             return;
         }
     };
+    Matrix33.prototype.compose = function (m2) {
+        var i = 0, j = 0;
+        for (i = 0; i < 3; i += 1) {
+            for (j = 0; j < 3; j += 1) {
+                this.m[i][j] = this.m[i][j] * m2[i][j];
+            }
+        }
+    };
     return Matrix33;
 })();
