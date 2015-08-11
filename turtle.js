@@ -70,7 +70,7 @@ var T3D;
             nt.y = this.y;
             nt.last_x = this.last_x;
             nt.last_y = this.last_y;
-            nt.h.set(this.h.rad);
+            nt.h.rad = this.h.rad;
             nt.camera = this.camera;
             nt.mission = code;
             return nt;
