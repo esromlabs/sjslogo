@@ -23,8 +23,10 @@ var T3D;
         return Camera;
     })();
     var Turtle = (function () {
-        function Turtle(ctx) {
+        function Turtle(ctx, $) {
             this.turtle_stack = [];
+            this.mission = '';
+            this.$ = $;
             this.ctx = ctx;
             this.x = ctx.canvas.width / 2;
             this.y = ctx.canvas.height / 2;
@@ -35,6 +37,44 @@ var T3D;
             this.text_path = "";
             this.camera = new Camera();
         }
+        Turtle.prototype.run_mission = function () {
+            var env = this;
+            var locals = {
+                "window": {},
+                "document": {},
+                "$": {},
+                "jQuery": {}
+            };
+            locals = this.$.extend({}, locals, env);
+            var createSandbox = function (env, code, locals) {
+                var params = [];
+                var args = [];
+                for (var param in locals) {
+                    if (locals.hasOwnProperty(param)) {
+                        args.push(locals[param]);
+                        params.push(param);
+                    }
+                }
+                var context = Array.prototype.concat.call(env, params, code);
+                var sandbox = new (Function.prototype.bind.apply(Function, context))();
+                context = Array.prototype.concat.call(env, args);
+                return Function.prototype.bind.apply(sandbox, context);
+            };
+            var sandbox = createSandbox(env, this.mission, locals);
+            sandbox();
+            return env;
+        };
+        Turtle.prototype.clone = function (code) {
+            var nt = new Turtle(this.ctx, this.$);
+            nt.x = this.x;
+            nt.y = this.y;
+            nt.last_x = this.last_x;
+            nt.last_y = this.last_y;
+            nt.h.set(this.h.rad);
+            nt.camera = this.camera;
+            nt.mission = code;
+            return nt;
+        };
         Turtle.prototype.push = function () {
             this.turtle_stack.push([this.x, this.y, this.h.rad]);
         };
@@ -134,4 +174,4 @@ cav.attr("height", "660");
 cav.attr("style", "border: 1px solid #d3d3d3; background: #bbbbbb");
 var ctx = cav[0].getContext("2d");
 $('#turtlerarium').append(cav);
-var yurt = new T3D.Turtle(ctx);
+var yurt = new T3D.Turtle(ctx, $);

@@ -33,7 +33,10 @@ module T3D {
         pen_down: boolean;
         turtle_stack = [];
 				camera:Camera;
-        constructor(ctx: CanvasRenderingContext2D) {
+        mission:string = '';
+
+        constructor(ctx: CanvasRenderingContext2D, $) {
+            this.$ = $;
             this.ctx = ctx;
             this.x = ctx.canvas.width / 2;
             this.y = ctx.canvas.height / 2;
@@ -43,6 +46,55 @@ module T3D {
             this.pen_down = true;
             this.text_path = "";
 						this.camera = new Camera();
+        }
+        run_mission() {
+          // Shadow some sensitive global objects
+          var env = this;
+          var locals = {
+            "window": {},
+            "document": {},
+            "$": {},
+            "jQuery": {}
+          };
+          // and mix in the environment
+          locals = this.$.extend({}, locals, env);
+
+          var createSandbox = function (env, code, locals) {
+            var params = []; // the names of local variables
+            var args = []; // the local variables
+
+            for (var param in locals) {
+              if (locals.hasOwnProperty(param)) {
+                args.push(locals[param]);
+                params.push(param);
+              }
+            }
+
+            var context = Array.prototype.concat.call(env, params, code); // create the parameter list for the sandbox
+            var sandbox = new (Function.prototype.bind.apply(Function, context))(); // create the sandbox function
+            context = Array.prototype.concat.call(env, args); // create the argument list for the sandbox
+
+            return Function.prototype.bind.apply(sandbox, context); // bind the local variables to the sandbox
+          };
+
+          // result is the 'this' object for the code
+          //var result = {};
+          var sandbox = createSandbox(env, this.mission, locals); // create a sandbox
+
+          sandbox(); // call the user code in the sandbox
+          return env;
+        }
+
+        clone(code) {
+          var nt = new Turtle(this.ctx, this.$);
+          nt.x = this.x;
+          nt.y = this.y;
+          nt.last_x = this.last_x;
+          nt.last_y = this.last_y;
+          nt.h.set(this.h.rad);
+          nt.camera = this.camera;
+          nt.mission = code;
+          return nt;
         }
         push() {
             this.turtle_stack.push([this.x, this.y, this.h.rad]);
@@ -154,4 +206,4 @@ cav.attr("style", "border: 1px solid #d3d3d3; background: #bbbbbb");
 var ctx = cav[0].getContext("2d");
 $('#turtlerarium').append(cav);
 
-var yurt = new T3D.Turtle(ctx);
+var yurt = new T3D.Turtle(ctx, $);
