@@ -62,7 +62,7 @@ var T3D;
             };
             var sandbox = createSandbox(env, this.mission, locals);
             sandbox();
-            return env;
+            return this;
         };
         Turtle.prototype.clone = function (code) {
             var nt = new Turtle(this.ctx, this.$);
@@ -77,12 +77,14 @@ var T3D;
         };
         Turtle.prototype.push = function () {
             this.turtle_stack.push([this.x, this.y, this.h.rad]);
+            return this;
         };
         Turtle.prototype.pop = function () {
             var pos = this.turtle_stack.pop();
             this.x = pos[0];
             this.y = pos[1];
             this.h.rad = pos[2];
+            return this;
         };
         Turtle.prototype.fd = function (dist) {
             this.ctx.beginPath();
@@ -103,29 +105,36 @@ var T3D;
             else {
                 this.ctx.moveTo(this.x, this.camera.transform(this.y));
             }
+            return this;
         };
         Turtle.prototype.bk = function (dist) {
-            this.fd(-dist);
+            return this.fd(-dist);
         };
         Turtle.prototype.rt = function (turn) {
             this.h.add(turn);
+            return this;
         };
         Turtle.prototype.lt = function (turn) {
             this.h.add(-turn);
+            return this;
         };
         Turtle.prototype.pu = function () {
             this.pen_down = false;
+            return this;
         };
         Turtle.prototype.pd = function () {
             this.pen_down = true;
+            return this;
         };
         Turtle.prototype.home = function () {
             this.x = this.ctx.canvas.width / 2;
             this.y = this.ctx.canvas.height / 2;
             this.h = new Heading();
+            return this;
         };
         Turtle.prototype.cs = function () {
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            return this;
         };
         Turtle.prototype.arc = function (opt) {
             var center_x, center_y;
@@ -162,6 +171,7 @@ var T3D;
             this.y = end_y;
             this.last_x = this.x;
             this.last_y = this.y;
+            return this;
         };
         return Turtle;
     })();

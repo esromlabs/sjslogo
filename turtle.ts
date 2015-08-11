@@ -82,7 +82,7 @@ module T3D {
           var sandbox = createSandbox(env, this.mission, locals); // create a sandbox
 
           sandbox(); // call the user code in the sandbox
-          return env;
+          return this;
         }
 
         clone(code) {
@@ -98,12 +98,14 @@ module T3D {
         }
         push() {
             this.turtle_stack.push([this.x, this.y, this.h.rad]);
+            return this;
         }
         pop() {
             let pos = this.turtle_stack.pop();
             this.x = pos[0];
             this.y = pos[1];
             this.h.rad = pos[2];
+            return this;
         }
         fd(dist: number) {
             this.ctx.beginPath();
@@ -128,29 +130,36 @@ module T3D {
             else {
                 this.ctx.moveTo(this.x, this.camera.transform(this.y));
             }
+            return this;
         }
         bk(dist: number) {
-            this.fd(-dist);
+            return this.fd(-dist);
         }
         rt(turn: number) {
             this.h.add(turn);
+            return this;
         }
         lt(turn: number) {
             this.h.add(-turn);
+            return this;
         }
         pu() {
             this.pen_down = false;
+            return this;
         }
         pd() {
             this.pen_down = true;
+            return this;
         }
         home() {
             this.x = this.ctx.canvas.width / 2;
             this.y = this.ctx.canvas.height / 2;
             this.h = new Heading();
+            return this;
         }
         cs() {
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            return this;
         }
         arc(opt) {
             var center_x, center_y;
@@ -191,6 +200,7 @@ module T3D {
             this.y = end_y;
             this.last_x = this.x;
             this.last_y = this.y;
+            return this;
         }
     }
 		T3D.Turtle = Turtle;
