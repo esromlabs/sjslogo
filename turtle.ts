@@ -16,18 +16,22 @@ module T3D {
 		T3D.Heading = Heading;
 
 		class Camera {
-			y_ratio: number = 1.0;
-			transform(y:number):number {
-				return y*this.y_ratio;
+			m: Matrix33;
+      constructor() {
+         this.m = new Matrix33();
+         this.m.rotate('x', 0.8);
+      }
+			transform(vec:Vector3):Vector3 {
+        var ret:Vector3 = new Vector3(vec.v);
+				return ret.applyProjection(this.m);
 			}
 		}
+
     // Main Turtle Class
     class Turtle {
         ctx: CanvasRenderingContext2D;
-        x: number;
-        y: number;
-        last_x: number;
-        last_y: number;
+        pos: Vector3;
+        last: Vector3;
         text_path: string;
         h: Heading; // heading in radians
         pen_down: boolean;
@@ -38,10 +42,12 @@ module T3D {
         constructor(ctx: CanvasRenderingContext2D, $) {
             this.$ = $;
             this.ctx = ctx;
-            this.x = ctx.canvas.width / 2;
-            this.y = ctx.canvas.height / 2;
-            this.last_x = -1;
-            this.last_y = -1;
+            this.pos = new Vector3();
+            this.pos.v[0] = ctx.canvas.width / 2;
+            this.pos.v[1] = ctx.canvas.height / 2;
+            this.last = new Vector3();
+            this.last.v[0] = -1;
+            this.last.v[1] = -1;
             this.h = new Heading();
             this.pen_down = true;
             this.text_path = "";
@@ -87,48 +93,50 @@ module T3D {
 
         clone(code) {
           var nt = new Turtle(this.ctx, this.$);
-          nt.x = this.x;
-          nt.y = this.y;
-          nt.last_x = this.last_x;
-          nt.last_y = this.last_y;
+          nt.x = this.pos.v[0];
+          nt.y = this.pos.v[1];
+          nt.last.v[0] = this.last.v[0];
+          nt.last.v[1] = this.last.v[1];
           nt.h.rad = this.h.rad;
           nt.camera = this.camera;
           nt.mission = code;
           return nt;
         }
         push() {
-            this.turtle_stack.push([this.x, this.y, this.h.rad]);
+            this.turtle_stack.push([this.pos.v[0], this.pos.v[1], this.h.rad]);
             return this;
         }
         pop() {
             let pos = this.turtle_stack.pop();
-            this.x = pos[0];
-            this.y = pos[1];
+            this.pos.v[0] = pos[0];
+            this.pos.v[1] = pos[1];
             this.h.rad = pos[2];
             return this;
         }
         fd(dist: number) {
             this.ctx.beginPath();
-            this.ctx.moveTo(this.x, this.camera.transform(this.y));
+            var view:Vector3 = this.camera.transform(this.pos);
+            this.ctx.moveTo(view.v[0], view.v[1]);
             if (this.pen_down && (
-                this.x !== this.last_x ||
-                this.y !== this.last_y)) {
+                this.pos.v[0] !== this.last.v[0] ||
+                this.pos.v[1] !== this.last.v[1])) {
                 // start a path
-                this.text_path += " m" + this.x + " " + this.y;
+                this.text_path += " m" + this.pos.v[0] + " " + this.pos.v[1];
             }
-            this.x = this.x + dist * Math.cos(this.h.rad);
-            this.y = this.y + dist * Math.sin(this.h.rad);
+            this.pos.v[0] = this.pos.v[0] + dist * Math.cos(this.h.rad);
+            this.pos.v[1] = this.pos.v[1] + dist * Math.sin(this.h.rad);
+            view = this.camera.transform(this.pos);
 
             if (this.pen_down) {
-                this.ctx.lineTo(this.x, this.camera.transform(this.y));
+                this.ctx.lineTo(view.v[0], view.v[1]);
                 this.ctx.stroke();
                 // start a path
-                this.text_path += " l" + this.x + " " + this.y;
-                this.last_x = this.x;
-                this.last_y = this.y;
+                this.text_path += " l" + this.pos.v[0] + " " + this.pos.v[1];
+                this.last.v[0] = this.pos.v[0];
+                this.last.v[1] = this.pos.v[1];
             }
             else {
-                this.ctx.moveTo(this.x, this.camera.transform(this.y));
+                this.ctx.moveTo(view.v[0], view.v[1]);
             }
             return this;
         }
@@ -152,8 +160,8 @@ module T3D {
             return this;
         }
         home() {
-            this.x = this.ctx.canvas.width / 2;
-            this.y = this.ctx.canvas.height / 2;
+            this.pos.v[0] = this.ctx.canvas.width / 2;
+            this.pos.v[1] = this.ctx.canvas.height / 2;
             this.h = new Heading();
             return this;
         }
@@ -182,24 +190,24 @@ module T3D {
             }
 
             //alert(heading_to_center);
-            center_x = this.x + opt.radius * Math.cos(heading_to_center);
-            center_y = this.y + opt.radius * Math.sin(heading_to_center);
+            center_x = this.pos.v[0] + opt.radius * Math.cos(heading_to_center);
+            center_y = this.pos.v[1] + opt.radius * Math.sin(heading_to_center);
             end_x = center_x + opt.radius * Math.cos(end_angle);
             end_y = center_y + opt.radius * Math.sin(end_angle);
             if (this.pen_down) {
                 this.ctx.beginPath();
-                this.ctx.moveTo(this.x, this.camera.transform(this.y));
+                this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
 								// ToDo make into ellipse rather than arc...
-                this.ctx.arc(center_x, this.camera.transform(center_y), opt.radius, start_angle, end_angle, anti_CW);
+                this.ctx.arc(center_x, center_y, opt.radius, start_angle, end_angle, anti_CW);
                 this.ctx.stroke();
                 // start a path
-                //this.text_path += " arc" + this.x + " " + this.y;
+                //this.text_path += " arc" + this.pos.v[0] + " " + this.pos.v[1];
             }
             this.h.rad = (opt.turn === "r") ? end_angle + Math.PI * 0.5 : end_angle - Math.PI * 0.5;
-            this.x = end_x;
-            this.y = end_y;
-            this.last_x = this.x;
-            this.last_y = this.y;
+            this.pos.v[0] = end_x;
+            this.pos.v[1] = end_y;
+            this.last.v[0] = this.pos.v[0];
+            this.last.v[1] = this.pos.v[1];
             return this;
         }
     }

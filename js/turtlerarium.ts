@@ -80,8 +80,8 @@ class Page {
 
 // classes for projection from 3D to 2D screen.
 class Vector3 {
-  v:Array = [];
-  constructor(v:Array) {
+  v = [];
+  constructor(v) {
     if (v) {
       this.v[0] = v[0];
       this.v[1] = v[1];
@@ -92,10 +92,10 @@ class Vector3 {
     }
   }
   applyProjection(matrix:Matrix33):Vector3 {
-    let ret_v = new Vector3();
-    ret_v[0] = matrix.m[0][0]*this.v[0] +  matrix.m[1][0]*this.v[1] +  matrix.m[2][0]*this.v[2];
-    ret_v[1] = matrix.m[0][1]*this.v[0] +  matrix.m[1][1]*this.v[1] +  matrix.m[2][1]*this.v[2];
-    ret_v[2] = matrix.m[0][2]*this.v[0] +  matrix.m[1][2]*this.v[1] +  matrix.m[2][2]*this.v[2];
+    let ret_v = new Vector3(null);
+    ret_v.v[0] = matrix.m[0][0]*this.v[0] +  matrix.m[1][0]*this.v[1] +  matrix.m[2][0]*this.v[2];
+    ret_v.v[1] = matrix.m[0][1]*this.v[0] +  matrix.m[1][1]*this.v[1] +  matrix.m[2][1]*this.v[2];
+    ret_v.v[2] = matrix.m[0][2]*this.v[0] +  matrix.m[1][2]*this.v[1] +  matrix.m[2][2]*this.v[2];
     return ret_v;
   }
 }
@@ -140,4 +140,16 @@ class Matrix33 {
       }
     }
   }
+}
+
+class TurtleTest {
+  constructor() {
+    var m = new Matrix33();
+    m.rotate('y', 0.9);
+    var v = new Vector3([2,3,5]);
+    alert(JSON.stringify(v));
+    v = v.applyProjection(m);
+    alert(JSON.stringify(v));
+  }
+
 }
