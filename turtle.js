@@ -70,8 +70,7 @@ var T3D;
         };
         Turtle.prototype.clone = function (code) {
             var nt = new Turtle(this.ctx, this.$);
-            nt.x = this.pos.v[0];
-            nt.y = this.pos.v[1];
+            nt.pos = new Vector3(this.pos.v);
             nt.last.v[0] = this.last.v[0];
             nt.last.v[1] = this.last.v[1];
             nt.h.rad = this.h.rad;

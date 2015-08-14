@@ -20,6 +20,9 @@ module T3D {
       constructor() {
          this.m = new Matrix33();
          this.m.rotate('x', 0.8);
+         //var temp_m = new Matrix33();
+         //temp_m.rotate('z', 0.8);
+         //this.m.compose(temp_m);
       }
 			transform(vec:Vector3):Vector3 {
         var ret:Vector3 = new Vector3(vec.v);
@@ -93,8 +96,7 @@ module T3D {
 
         clone(code) {
           var nt = new Turtle(this.ctx, this.$);
-          nt.x = this.pos.v[0];
-          nt.y = this.pos.v[1];
+          nt.pos = new Vector3(this.pos.v);
           nt.last.v[0] = this.last.v[0];
           nt.last.v[1] = this.last.v[1];
           nt.h.rad = this.h.rad;
