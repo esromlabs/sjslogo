@@ -16,7 +16,10 @@ var T3D;
     var Camera = (function () {
         function Camera() {
             this.m = new Matrix33();
-            this.m.rotate('x', 0.8);
+            this.m.rotate('z', -0.4);
+            var temp_m = new Matrix33();
+            temp_m.rotate('x', 1.4);
+            this.m.compose(temp_m);
         }
         Camera.prototype.transform = function (vec) {
             var ret = new Vector3(vec.v);

@@ -19,10 +19,10 @@ module T3D {
 			m: Matrix33;
       constructor() {
          this.m = new Matrix33();
-         this.m.rotate('x', 0.8);
-         //var temp_m = new Matrix33();
-         //temp_m.rotate('z', 0.8);
-         //this.m.compose(temp_m);
+         this.m.rotate('z', -0.4);
+         var temp_m = new Matrix33();
+         temp_m.rotate('x', 1.4);
+         this.m.compose(temp_m);
       }
 			transform(vec:Vector3):Vector3 {
         var ret:Vector3 = new Vector3(vec.v);

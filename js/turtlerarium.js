@@ -118,9 +118,14 @@ var Matrix33 = (function () {
     };
     Matrix33.prototype.compose = function (m2) {
         var i = 0, j = 0;
+        var k = 0, sum = 0;
         for (i = 0; i < 3; i += 1) {
             for (j = 0; j < 3; j += 1) {
-                this.m[i][j] = this.m[i][j] * m2.m[i][j];
+                sum = 0;
+                for (k = 0; k < 3; k += 1) {
+                    sum += this.m[i][k] * m2.m[k][j];
+                }
+                this.m[i][j] = sum;
             }
         }
     };
