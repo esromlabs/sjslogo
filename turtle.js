@@ -15,11 +15,11 @@ var T3D;
     T3D.Heading = Heading;
     var Camera = (function () {
         function Camera() {
-            this.m = new Matrix33();
-            this.m.rotate('z', -0.4);
-            var temp_m = new Matrix33();
-            temp_m.rotate('x', 1.4);
+            var temp_m = new Matrix44();
+            this.m = new Matrix44();
+            temp_m.rotate('y', Math.PI / 4);
             this.m.compose(temp_m);
+            alert(JSON.stringify(this.m));
         }
         Camera.prototype.transform = function (vec) {
             var ret = new Vector3(vec.v);

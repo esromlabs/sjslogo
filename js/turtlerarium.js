@@ -77,63 +77,72 @@ var Vector3 = (function () {
     }
     Vector3.prototype.applyProjection = function (matrix) {
         var ret_v = new Vector3(null);
-        ret_v.v[0] = matrix.m[0][0] * this.v[0] + matrix.m[1][0] * this.v[1] + matrix.m[2][0] * this.v[2];
-        ret_v.v[1] = matrix.m[0][1] * this.v[0] + matrix.m[1][1] * this.v[1] + matrix.m[2][1] * this.v[2];
-        ret_v.v[2] = matrix.m[0][2] * this.v[0] + matrix.m[1][2] * this.v[1] + matrix.m[2][2] * this.v[2];
+        ret_v.v[0] = matrix.m[0][0] * this.v[0] + matrix.m[0][1] * this.v[1] + matrix.m[0][2] * this.v[2] + matrix.m[0][3];
+        ret_v.v[1] = matrix.m[1][0] * this.v[0] + matrix.m[1][1] * this.v[1] + matrix.m[1][2] * this.v[2] + matrix.m[1][3];
+        ret_v.v[2] = matrix.m[2][0] * this.v[0] + matrix.m[2][1] * this.v[1] + matrix.m[2][2] * this.v[2] + matrix.m[2][3];
         return ret_v;
     };
     return Vector3;
 })();
-var Matrix33 = (function () {
-    function Matrix33() {
+var Matrix44 = (function () {
+    function Matrix44() {
         this.m = [];
-        this.m = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+        this.m = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
     }
-    Matrix33.prototype.rotate = function (axis, angle) {
+    Matrix44.prototype.translate = function (delta) {
+        this.m = [
+            [1, 0, 0, delta.v[0]],
+            [0, 1, 0, delta.v[1]],
+            [0, 0, 1, delta.v[2]],
+            [0, 0, 0, 1]
+        ];
+        return;
+    };
+    Matrix44.prototype.rotate = function (axis, angle) {
         var c = Math.cos(angle), s = Math.sin(angle);
         if (axis === 'x') {
             this.m = [
-                [1, 0, 0],
-                [0, c, -s],
-                [0, s, c]
+                [1, 0, 0, 0],
+                [0, c, -s, 0],
+                [0, s, c, 0],
+                [0, 0, 0, 1]
             ];
-            return;
         }
         if (axis === 'y') {
             this.m = [
-                [c, 0, s],
-                [0, 1, 0],
-                [-s, 0, c]
+                [c, 0, s, 0],
+                [0, 1, 0, 0],
+                [-s, 0, c, 0],
+                [0, 0, 0, 1]
             ];
-            return;
         }
         if (axis === 'z') {
             this.m = [
-                [c, -s, 0],
-                [s, c, 0],
-                [0, 0, 1]
+                [c, -s, 0, 0],
+                [s, c, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1]
             ];
-            return;
         }
     };
-    Matrix33.prototype.compose = function (m2) {
+    Matrix44.prototype.compose = function (m2) {
         var i = 0, j = 0;
         var k = 0, sum = 0;
-        for (i = 0; i < 3; i += 1) {
-            for (j = 0; j < 3; j += 1) {
+        for (i = 0; i < 4; i += 1) {
+            for (j = 0; j < 4; j += 1) {
                 sum = 0;
-                for (k = 0; k < 3; k += 1) {
+                for (k = 0; k < 4; k += 1) {
                     sum += this.m[i][k] * m2.m[k][j];
                 }
                 this.m[i][j] = sum;
             }
         }
     };
-    return Matrix33;
+    return Matrix44;
 })();
 var TurtleTest = (function () {
     function TurtleTest() {
-        var m = new Matrix33();
+        var m = new Matrix44();
         m.rotate('y', 0.9);
         var v = new Vector3([2, 3, 5]);
         alert(JSON.stringify(v));

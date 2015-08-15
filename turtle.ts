@@ -16,13 +16,17 @@ module T3D {
 		T3D.Heading = Heading;
 
 		class Camera {
-			m: Matrix33;
+			m: Matrix44;
       constructor() {
-         this.m = new Matrix33();
-         this.m.rotate('z', -0.4);
-         var temp_m = new Matrix33();
-         temp_m.rotate('x', 1.4);
-         this.m.compose(temp_m);
+        var temp_m = new Matrix44();
+        this.m = new Matrix44();
+        //this.m.translate(center);
+        //alert(JSON.stringify(this.m));
+        temp_m.rotate('y', Math.PI/4);
+        this.m.compose(temp_m);
+        alert(JSON.stringify(this.m));
+//        temp_m.rotate('x', 1.4);
+//        this.m.compose(temp_m);
       }
 			transform(vec:Vector3):Vector3 {
         var ret:Vector3 = new Vector3(vec.v);
