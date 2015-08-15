@@ -24,7 +24,7 @@ module T3D {
         //alert(JSON.stringify(this.m));
         temp_m.rotate('y', Math.PI/4);
         this.m.compose(temp_m);
-        alert(JSON.stringify(this.m));
+        //alert(JSON.stringify(this.m));
 //        temp_m.rotate('x', 1.4);
 //        this.m.compose(temp_m);
       }

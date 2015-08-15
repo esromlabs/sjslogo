@@ -159,11 +159,13 @@ class Matrix44 {
 class TurtleTest {
   constructor() {
     var m = new Matrix44();
-    m.rotate('y', 0.9);
+    var offset = new Vector3([20, 30, 50]);
+    //m.rotate('y', 0.9);
+    m.translate(offset);
     var v = new Vector3([2,3,5]);
-    alert(JSON.stringify(v));
+    //alert(JSON.stringify(v));
     v = v.applyProjection(m);
-    alert(JSON.stringify(v));
+    //alert(JSON.stringify(v));
   }
 
 }
