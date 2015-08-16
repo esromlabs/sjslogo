@@ -163,9 +163,9 @@ class TurtleTest {
     //m.rotate('y', 0.9);
     m.translate(offset);
     var v = new Vector3([2,3,5]);
-    //alert(JSON.stringify(v));
+    alert(JSON.stringify(v));
     v = v.applyProjection(m);
-    //alert(JSON.stringify(v));
+    alert(JSON.stringify(v));
   }
 
 }

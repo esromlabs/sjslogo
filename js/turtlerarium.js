@@ -146,7 +146,9 @@ var TurtleTest = (function () {
         var offset = new Vector3([20, 30, 50]);
         m.translate(offset);
         var v = new Vector3([2, 3, 5]);
+        alert(JSON.stringify(v));
         v = v.applyProjection(m);
+        alert(JSON.stringify(v));
     }
     return TurtleTest;
 })();

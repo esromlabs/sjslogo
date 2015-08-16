@@ -22,7 +22,7 @@ module T3D {
         this.m = new Matrix44();
         //this.m.translate(center);
         //alert(JSON.stringify(this.m));
-        temp_m.rotate('y', Math.PI/4);
+        temp_m.rotate('x', Math.PI/4);
         this.m.compose(temp_m);
         //alert(JSON.stringify(this.m));
 //        temp_m.rotate('x', 1.4);

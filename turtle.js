@@ -17,7 +17,7 @@ var T3D;
         function Camera() {
             var temp_m = new Matrix44();
             this.m = new Matrix44();
-            temp_m.rotate('y', Math.PI / 4);
+            temp_m.rotate('x', Math.PI / 4);
             this.m.compose(temp_m);
         }
         Camera.prototype.transform = function (vec) {
