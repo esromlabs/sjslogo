@@ -15,25 +15,6 @@ module T3D {
     }
 		T3D.Heading = Heading;
 
-		class Camera {
-			m: Matrix44;
-      constructor() {
-        var temp_m = new Matrix44();
-        this.m = new Matrix44();
-        //this.m.translate(center);
-        //alert(JSON.stringify(this.m));
-        temp_m.rotate('x', Math.PI/4);
-        this.m.compose(temp_m);
-        //alert(JSON.stringify(this.m));
-//        temp_m.rotate('x', 1.4);
-//        this.m.compose(temp_m);
-      }
-			transform(vec:Vector3):Vector3 {
-        var ret:Vector3 = new Vector3(vec.v);
-				return ret.applyProjection(this.m);
-			}
-		}
-
     // Main Turtle Class
     class Turtle {
         ctx: CanvasRenderingContext2D;
@@ -43,7 +24,6 @@ module T3D {
         h: Heading; // heading in radians
         pen_down: boolean;
         turtle_stack = [];
-				camera:Camera;
         mission:string = '';
 
         constructor(ctx: CanvasRenderingContext2D, $) {
@@ -58,7 +38,6 @@ module T3D {
             this.h = new Heading();
             this.pen_down = true;
             this.text_path = "";
-						this.camera = new Camera();
         }
         run_mission() {
           // Shadow some sensitive global objects
@@ -104,7 +83,6 @@ module T3D {
           nt.last.v[0] = this.last.v[0];
           nt.last.v[1] = this.last.v[1];
           nt.h.rad = this.h.rad;
-          nt.camera = this.camera;
           nt.mission = code;
           return nt;
         }
@@ -121,8 +99,7 @@ module T3D {
         }
         fd(dist: number) {
             this.ctx.beginPath();
-            var view:Vector3 = this.camera.transform(this.pos);
-            this.ctx.moveTo(view.v[0], view.v[1]);
+            this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
             if (this.pen_down && (
                 this.pos.v[0] !== this.last.v[0] ||
                 this.pos.v[1] !== this.last.v[1])) {
@@ -131,10 +108,9 @@ module T3D {
             }
             this.pos.v[0] = this.pos.v[0] + dist * Math.cos(this.h.rad);
             this.pos.v[1] = this.pos.v[1] + dist * Math.sin(this.h.rad);
-            view = this.camera.transform(this.pos);
 
             if (this.pen_down) {
-                this.ctx.lineTo(view.v[0], view.v[1]);
+                this.ctx.lineTo(this.pos.v[0], this.pos.v[1]);
                 this.ctx.stroke();
                 // start a path
                 this.text_path += " l" + this.pos.v[0] + " " + this.pos.v[1];
@@ -142,7 +118,7 @@ module T3D {
                 this.last.v[1] = this.pos.v[1];
             }
             else {
-                this.ctx.moveTo(view.v[0], view.v[1]);
+                this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
             }
             return this;
         }

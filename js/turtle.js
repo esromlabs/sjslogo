@@ -13,19 +13,6 @@ var T3D;
         return Heading;
     })();
     T3D.Heading = Heading;
-    var Camera = (function () {
-        function Camera() {
-            var temp_m = new Matrix44();
-            this.m = new Matrix44();
-            temp_m.rotate('x', Math.PI / 4);
-            this.m.compose(temp_m);
-        }
-        Camera.prototype.transform = function (vec) {
-            var ret = new Vector3(vec.v);
-            return ret.applyProjection(this.m);
-        };
-        return Camera;
-    })();
     var Turtle = (function () {
         function Turtle(ctx, $) {
             this.turtle_stack = [];
@@ -41,7 +28,6 @@ var T3D;
             this.h = new Heading();
             this.pen_down = true;
             this.text_path = "";
-            this.camera = new Camera();
         }
         Turtle.prototype.run_mission = function () {
             var env = this;
@@ -76,7 +62,6 @@ var T3D;
             nt.last.v[0] = this.last.v[0];
             nt.last.v[1] = this.last.v[1];
             nt.h.rad = this.h.rad;
-            nt.camera = this.camera;
             nt.mission = code;
             return nt;
         };
@@ -93,24 +78,22 @@ var T3D;
         };
         Turtle.prototype.fd = function (dist) {
             this.ctx.beginPath();
-            var view = this.camera.transform(this.pos);
-            this.ctx.moveTo(view.v[0], view.v[1]);
+            this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
             if (this.pen_down && (this.pos.v[0] !== this.last.v[0] ||
                 this.pos.v[1] !== this.last.v[1])) {
                 this.text_path += " m" + this.pos.v[0] + " " + this.pos.v[1];
             }
             this.pos.v[0] = this.pos.v[0] + dist * Math.cos(this.h.rad);
             this.pos.v[1] = this.pos.v[1] + dist * Math.sin(this.h.rad);
-            view = this.camera.transform(this.pos);
             if (this.pen_down) {
-                this.ctx.lineTo(view.v[0], view.v[1]);
+                this.ctx.lineTo(this.pos.v[0], this.pos.v[1]);
                 this.ctx.stroke();
                 this.text_path += " l" + this.pos.v[0] + " " + this.pos.v[1];
                 this.last.v[0] = this.pos.v[0];
                 this.last.v[1] = this.pos.v[1];
             }
             else {
-                this.ctx.moveTo(view.v[0], view.v[1]);
+                this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
             }
             return this;
         };
