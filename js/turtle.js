@@ -12,7 +12,6 @@ var T3D;
         };
         return Heading;
     })();
-    T3D.Heading = Heading;
     var Turtle = (function () {
         function Turtle(ctx, $) {
             this.turtle_stack = [];

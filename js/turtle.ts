@@ -13,7 +13,7 @@ module T3D {
             this.rad += degrees * 0.0174532925;
         }
     }
-		T3D.Heading = Heading;
+		//T3D.Heading = Heading;
 
     // Main Turtle Class
     class Turtle {
