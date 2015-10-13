@@ -12,7 +12,8 @@ var examples = {
                 $('#logo_code').val(code);
             }
         });
-    }
+    },
+    "aspinaround": function () { $.ajax('aspinaround.js', { 'success': function (code) { $('#logo_code').val(code); } }); return 'loading'; }
 };
 var Page = (function () {
     function Page($) {
@@ -25,6 +26,9 @@ var Page = (function () {
         $('#process').on('click', function () {
             var code = $('#logo_code').val();
             page.run_sjslogo({}, code);
+        });
+        $.each(examples, function (i, o) {
+            $('#how_about_this').append('<option value="' + i + '">' + i + '</option>');
         });
         $('#how_about_this').on('change', function () {
             this.current_script_name = $(this).val();
