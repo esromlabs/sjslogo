@@ -5,15 +5,15 @@ var examples = {
   "chaining":'// you can chain together yurtle calls\nyurt.pd().fd(20).lt(72).rt(36).fd(10);\n',
   "cloning":'yurt.pd().fd(20).lt(72);\nyurt.clone("this.rt(36).fd(10);").run_mission();\n',
   "grid":'// make a grid using loops and clones.\nunit = 20;\ngridCountWidth = 10;\ngridCountHeight = 12;\nvar i = 0;\nfor (i = 0; i < gridCountHeight; i += 1) {\n    yurt.clone("this.rt(90).fd(gridCountWidth*unit);").run_mission();\n    yurt.pd().fd(unit);\n}\nyurt.rt(90)\nfor (i = 0; i < gridCountWidth; i += 1) {\n    yurt.pd().fd(unit).clone("this.rt(90).fd(gridCountHeight*unit);").run_mission();\n}\n',
-  "penrose_tiling_perimeter": function() { $.ajax('fractile_penrose_perimeter.js', {'success': function(code) {$('#logo_code').val(code);}}); return 'loading'; },
+  "penrose_tiling_perimeter": function() { $.ajax('examples/fractile_penrose_perimeter.js', {'success': function(code) {$('#logo_code').val(code);}}); return 'loading'; },
   "fractal_penrose": function() {
-    $.ajax('fractal_penrose.js', {
+    $.ajax('examples/fractal_penrose.js', {
       "success": function(code) {
         $('#logo_code').val(code);
       }
     });
   },
-  "aspinaround": function() { $.ajax('aspinaround.js', {'success': function(code) {$('#logo_code').val(code);}}); return 'loading'; }
+  "aspinaround": function() { $.ajax('examples/aspinaround.js', {'success': function(code) {$('#logo_code').val(code);}}); return 'loading'; }
 };
 
 class Page {
