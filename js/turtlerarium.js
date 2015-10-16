@@ -13,7 +13,7 @@ var examples = {
             }
         });
     },
-    "aspinaround": function () { $.ajax('examples/aspinaround.js', { 'success': function (code) { $('#logo_code').val(code); } }); return 'loading'; }
+    "circle round": function () { $.ajax('examples/circleround.js', { 'success': function (code) { $('#logo_code').val(code); } }); return 'loading'; }
 };
 var Page = (function () {
     function Page($) {
