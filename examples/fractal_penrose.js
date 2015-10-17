@@ -41,7 +41,7 @@ function w (s) {
   yurt.pu();
 }
 
-// generate rotation scale kind recursion_depth paint_all_levels
+// generate (at_scale, kind[t,w], recursion_depth, paint_all_levels)
 function gen (s, k, depth, paint_at_level) {
   'use strict';
   var dep, scale;
@@ -125,26 +125,24 @@ function gen (s, k, depth, paint_at_level) {
     }
   }
 }
-
 yurt.cs();
 yurt.home();
 yurt.pu();
-//setcolor "brown
-yurt.fd(-60);
 yurt.lt(90);
-yurt.fd(250);
+yurt.fd(220);
 yurt.rt(90);
 
 yurt.rt(2 * 36);
+var level = 0;
+var scale = 280;
 // level one test of 't'
-t(200);
-gen(200, 't', 6, 1);
+//t(scale);
+gen(scale, 't', level, 1);
 yurt.lt(1 * 36);
 
-
-yurt.bk(200 * 1.618034);
+yurt.bk(scale * 1.618034);
 yurt.rt(1 * 36);
-yurt.fd(200 * 1.618034);
+yurt.fd(scale * 1.618034);
 yurt.lt(1 * 36);
 
 yurt.rt(90 - 36);
@@ -152,5 +150,5 @@ yurt.fd(40);
 yurt.lt(90 - 36);
 
 // level one test of 'w'
-w(200);
-gen(200, 'w', 6, 1);
+//w(scale);
+gen(scale, 'w', level, 1);
