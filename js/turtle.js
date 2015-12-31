@@ -16,6 +16,7 @@ var T3D;
         function Turtle(ctx, $) {
             this.turtle_stack = [];
             this.mission = '';
+            this.$ = null;
             this.$ = $;
             this.ctx = ctx;
             this.pos = new Vector3();
@@ -26,7 +27,7 @@ var T3D;
             this.last.v[1] = -1;
             this.h = new Heading();
             this.pen_down = true;
-            this.text_path = "";
+            this.text_path = "M";
         }
         Turtle.prototype.run_mission = function () {
             var env = this;
@@ -75,25 +76,40 @@ var T3D;
             this.h.rad = pos[2];
             return this;
         };
+        Turtle.prototype.close = function (v1, v2) {
+            if (v1 + 0.001 > v2 && v1 - 0.001 < v2) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
         Turtle.prototype.fd = function (dist) {
+            var svg_text = "";
+            var json_pt = '';
             this.ctx.beginPath();
             this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
-            if (this.pen_down && (this.pos.v[0] !== this.last.v[0] ||
-                this.pos.v[1] !== this.last.v[1])) {
-                this.text_path += " m" + this.pos.v[0] + " " + this.pos.v[1];
+            if (this.pen_down) {
+                if (this.text_path === 'M' || (close(this.last.v[0], this.pos.v[0]) && close(this.last.v[1], this.pos.v[1]))) {
+                    svg_text = this.text_path + this.pos.v[0] + " " + this.pos.v[1];
+                    this.text_path = ' L';
+                }
+                json_pt = "[" + this.pos.v[0] + "," + this.pos.v[1];
             }
             this.pos.v[0] = this.pos.v[0] + dist * Math.cos(this.h.rad);
             this.pos.v[1] = this.pos.v[1] + dist * Math.sin(this.h.rad);
             if (this.pen_down) {
                 this.ctx.lineTo(this.pos.v[0], this.pos.v[1]);
                 this.ctx.stroke();
-                this.text_path += " l" + this.pos.v[0] + " " + this.pos.v[1];
+                svg_text += " L" + this.pos.v[0] + " " + this.pos.v[1] + ' \n';
+                json_pt += "," + this.pos.v[0] + ", " + this.pos.v[1] + '],\n';
                 this.last.v[0] = this.pos.v[0];
                 this.last.v[1] = this.pos.v[1];
             }
             else {
                 this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
             }
+            this.$('#svg_out').append(svg_text);
             return this;
         };
         Turtle.prototype.bk = function (dist) {
