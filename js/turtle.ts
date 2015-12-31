@@ -98,7 +98,7 @@ module T3D {
             this.h.rad = pos[2];
             return this;
         }
-        close(v1, v2) {
+        is_close(v1, v2) {
           if (v1 + 0.001 > v2 && v1 - 0.001 < v2) {
             return true;
           }
@@ -112,9 +112,14 @@ module T3D {
             this.ctx.beginPath();
             this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
             if (this.pen_down) {
-              if (this.text_path === 'M' || ( close(this.last.v[0], this.pos.v[0]) && close(this.last.v[1], this.pos.v[1])) {
+              if (this.text_path === 'M'
+              //||
+                //( this.is_close(this.last.v[0], this.pos.v[0])
+                //  && this.is_close(this.last.v[1], this.pos.v[1])
+                //)
+                ) {
                 svg_text = this.text_path + this.pos.v[0] + " " + this.pos.v[1];
-                this.text_path = ' L';
+                //this.text_path = ' L';
               }
               json_pt = "[" + this.pos.v[0] + "," + this.pos.v[1];
             }
@@ -132,9 +137,10 @@ module T3D {
             }
             else {
                 this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
+                this.ctx.arc(this.pos.v[0], this.pos.v[1], 3, 0, 2*Math.PI);
             }
             this.$('#svg_out').append(svg_text);
-            //this.$('#json_out').append(json_pt);
+            this.$('#json_out').append(json_pt);
             return this;
         }
         bk(dist: number) {

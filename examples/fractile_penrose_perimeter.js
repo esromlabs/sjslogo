@@ -206,7 +206,7 @@ function w1t4(t, scale, level) {
         t.pop();
     }
 }
-var level = 7;
+var level = 4;
 yurt.pu().cs().home();
 yurt.bk(260);
 w1(yurt, 350, level);
