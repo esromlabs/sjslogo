@@ -38,7 +38,7 @@ module T3D {
             this.last.v[1] = -1;
             this.h = new Heading();
             this.pen_down = true;
-            this.text_path = "M";
+            this.text_path = "";
         }
         run_mission() {
           // Shadow some sensitive global objects
@@ -98,8 +98,9 @@ module T3D {
             this.h.rad = pos[2];
             return this;
         }
-        is_close(v1, v2) {
-          if (v1 + 0.001 > v2 && v1 - 0.001 < v2) {
+        is_close(p1:Vector3, p2:Vector3):boolean {
+          if (p1.v[0] + 0.01 > p2.v[0] && p1.v[0] - 0.01 < p2.v[0]
+            && p1.v[1] + 0.01 > p2.v[1] && p1.v[1] - 0.01 < p2.v[1]) {
             return true;
           }
           else {
@@ -107,41 +108,50 @@ module T3D {
           }
         }
         fd(dist: number) {
-          let svg_text:string = "";
+          let svg_text:string = '';
           let json_pt:string = '';
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
-            if (this.pen_down) {
-              if (this.text_path === 'M'
-              //||
-                //( this.is_close(this.last.v[0], this.pos.v[0])
-                //  && this.is_close(this.last.v[1], this.pos.v[1])
-                //)
-                ) {
-                svg_text = this.text_path + this.pos.v[0] + " " + this.pos.v[1];
-                //this.text_path = ' L';
-              }
-              json_pt = "[" + this.pos.v[0] + "," + this.pos.v[1];
+          let pt_a: Vector3 = new Vector3(this.pos.v);
+          let pt_b: Vector3;
+          this.pos.v[0] = this.pos.v[0] + dist * Math.cos(this.h.rad);
+          this.pos.v[1] = this.pos.v[1] + dist * Math.sin(this.h.rad);
+          pt_b = new Vector3(this.pos.v);
+          if (this.pen_down) {
+            // start a path output to either svg and/or JSON
+            pt_b = new Vector3(this.pos.v);
+            if (!this.is_close(this.last, pt_a)) {
+                  // swap pt_a and pt_b
+                  pt_b = new Vector3(pt_a.v);
+                  pt_a = new Vector3(this.pos.v);
             }
-            this.pos.v[0] = this.pos.v[0] + dist * Math.cos(this.h.rad);
-            this.pos.v[1] = this.pos.v[1] + dist * Math.sin(this.h.rad);
+            if (this.text_path === '') {
+                  //svg_text = this.text_path + pt_a.v[0] + " " + pt_a.v[1] + ' \n';
+                  this.text_path = 'M';
+            }
+            json_pt = "[" + pt_a.v[0] + ", " + pt_a.v[1];
 
-            if (this.pen_down) {
-                this.ctx.lineTo(this.pos.v[0], this.pos.v[1]);
-                this.ctx.stroke();
-                // start a path
-                svg_text += " L" + this.pos.v[0] + " " + this.pos.v[1] + ' \n';
-                json_pt +=  ","+ this.pos.v[0] + ", " + this.pos.v[1]+'],\n';
-                this.last.v[0] = this.pos.v[0];
-                this.last.v[1] = this.pos.v[1];
+            svg_text = this.text_path + pt_b.v[0]*0.3 + " " + pt_b.v[1]*0.3 + ' \n';
+            this.text_path = ' L';
+            json_pt +=  ", " + pt_b.v[0] + ", " + pt_b.v[1]+'],\n';
+            this.ctx.beginPath();
+            this.ctx.moveTo(pt_a.v[0], pt_a.v[1]);
+            this.ctx.lineTo(pt_b.v[0], pt_b.v[1]);
+            this.ctx.stroke();
+            if (dist > 0) {
+              this.last.v[0] = pt_b.v[0];
+              this.last.v[1] = pt_b.v[1];
             }
             else {
-                this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
-                this.ctx.arc(this.pos.v[0], this.pos.v[1], 3, 0, 2*Math.PI);
+              this.last.v[0] = this.pos.v[0];
+              this.last.v[1] = this.pos.v[1];
             }
-            this.$('#svg_out').append(svg_text);
-            this.$('#json_out').append(json_pt);
-            return this;
+          }
+          else {
+              this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
+              this.ctx.arc(this.pos.v[0], this.pos.v[1], 3, 0, 2*Math.PI);
+          }
+          this.$('#svg_out').append(svg_text);
+          this.$('#json_out').append(json_pt);
+          return this;
         }
         bk(dist: number) {
             return this.fd(-dist);
