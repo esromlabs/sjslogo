@@ -26,6 +26,7 @@ module T3D {
         turtle_stack = [];
         mission:string = '';
         $ = null;
+        dashed:Object;
 
         constructor(ctx: CanvasRenderingContext2D, $) {
             this.$ = $;
@@ -39,6 +40,8 @@ module T3D {
             this.h = new Heading();
             this.pen_down = true;
             this.text_path = "";
+            let undashed_array = this.ctx.getLineDash();
+            this.dashed = {i:0, arr:[undashed_array, [2,4]] };
         }
         run_mission() {
           // Shadow some sensitive global objects
@@ -88,7 +91,7 @@ module T3D {
           return nt;
         }
         push() {
-            this.turtle_stack.push([this.pos.v[0], this.pos.v[1], this.h.rad]);
+            this.turtle_stack.push([this.pos.v[0], this.pos.v[1], this.h.rad, this.dashed.i]);
             return this;
         }
         pop() {
@@ -96,6 +99,8 @@ module T3D {
             this.pos.v[0] = pos[0];
             this.pos.v[1] = pos[1];
             this.h.rad = pos[2];
+            this.dashed.i = pos[3];
+            this.dash(this.dashed.i);
             return this;
         }
         is_close(p1:Vector3, p2:Vector3):boolean {
@@ -171,6 +176,10 @@ module T3D {
         pd() {
             this.pen_down = true;
             return this;
+        }
+        dash(i:integer) {
+            this.dashed.i = i;
+            this.ctx.setLineDash(this.dashed.arr[this.dashed.i]);
         }
         home() {
             this.pos.v[0] = this.ctx.canvas.width / 2;

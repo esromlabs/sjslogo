@@ -26,6 +26,8 @@ class Page {
     $('#logo_code').val(examples[this.current_script_name]);
     $('#process').on('click', function() {
       var code = $('#logo_code').val();
+      $('#svg_out').empty();
+      $('#json_out').empty();
       page.run_sjslogo({}, code);
     });
     $.each(examples, function(i,o) {
