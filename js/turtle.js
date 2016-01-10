@@ -89,13 +89,15 @@ var T3D;
                 return false;
             }
         };
-        Turtle.prototype.fd = function (dist) {
+        Turtle.prototype.fd = function (dist, rise) {
+            if (rise === void 0) { rise = 0; }
             var svg_text = '';
             var json_pt = '';
             var pt_a = new Vector3(this.pos.v);
             var pt_b;
             this.pos.v[0] = this.pos.v[0] + dist * Math.cos(this.h.rad);
             this.pos.v[1] = this.pos.v[1] + dist * Math.sin(this.h.rad);
+            this.pos.v[2] = this.pos.v[2] + rise;
             pt_b = new Vector3(this.pos.v);
             if (this.pen_down) {
                 pt_b = new Vector3(this.pos.v);
@@ -109,7 +111,7 @@ var T3D;
                 json_pt = "[" + pt_a.v[0] + ", " + pt_a.v[1];
                 svg_text = this.text_path + pt_b.v[0] * 0.3 + " " + pt_b.v[1] * 0.3 + ' \n';
                 this.text_path = ' L';
-                json_pt += ", " + pt_b.v[0] + ", " + pt_b.v[1] + '],\n';
+                json_pt += ", " + pt_b.v[0] + ", " + pt_b.v[1] + ", " + pt_b.v[2] + '],\n';
                 this.ctx.beginPath();
                 this.ctx.moveTo(pt_a.v[0], pt_a.v[1]);
                 this.ctx.lineTo(pt_b.v[0], pt_b.v[1]);
@@ -131,8 +133,9 @@ var T3D;
             this.$('#json_out').append(json_pt);
             return this;
         };
-        Turtle.prototype.bk = function (dist) {
-            return this.fd(-dist);
+        Turtle.prototype.bk = function (dist, rise) {
+            if (rise === void 0) { rise = 0; }
+            return this.fd(-dist, -rise);
         };
         Turtle.prototype.rt = function (turn) {
             this.h.add(turn);
