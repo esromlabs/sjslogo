@@ -1,5 +1,5 @@
 // You have a turtle named 'yurt' at the ready.
-function t (s) {
+function t (s, rise) {
   'use strict';
   yurt.pd();
   // decorate with an arc that indicates the orientation of the rhombus
@@ -8,19 +8,19 @@ function t (s) {
   //yurt.rt(2 * 36);
 
   yurt.rt(2 * 36);
-  yurt.fd(s);
+  yurt.fd(s, rise);
   yurt.lt(4 * 36);
-  yurt.fd(s);
+  yurt.fd(s, rise);
   yurt.lt(1 * 36);
-  yurt.fd(s);
+  yurt.fd(s, -rise);
   yurt.lt(4 * 36);
-  yurt.fd(s);
+  yurt.fd(s, -rise);
   yurt.lt(1 * 36);
   yurt.lt(2 * 36);
   yurt.pu();
 }
 
-function w (s) {
+function w (s, rise) {
   'use strict';
   yurt.pd();
   // decorate with an arc that indicates the orientation of the rhombus
@@ -29,13 +29,13 @@ function w (s) {
   //yurt.rt(1 * 36
 
   yurt.rt(1 * 36);
-  yurt.fd(s);
+  yurt.fd(s, rise);
   yurt.lt(2 * 36);
-  yurt.fd(s);
+  yurt.fd(s, rise);
   yurt.lt(3 * 36);
-  yurt.fd(s);
+  yurt.fd(s, -rise);
   yurt.lt(2 * 36);
-  yurt.fd(s);
+  yurt.fd(s, -rise);
   yurt.lt(3 * 36);
   yurt.lt(1 * 36);
   yurt.pu();
