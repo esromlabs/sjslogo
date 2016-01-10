@@ -86,20 +86,22 @@ module T3D {
           nt.pos = new Vector3(this.pos.v);
           nt.last.v[0] = this.last.v[0];
           nt.last.v[1] = this.last.v[1];
+          nt.last.v[2] = this.last.v[2];
           nt.h.rad = this.h.rad;
           nt.mission = code;
           return nt;
         }
         push() {
-            this.turtle_stack.push([this.pos.v[0], this.pos.v[1], this.h.rad, this.dashed.i]);
+            this.turtle_stack.push([this.pos.v[0], this.pos.v[1], this.pos.v[2], this.h.rad, this.dashed.i]);
             return this;
         }
         pop() {
             let pos = this.turtle_stack.pop();
             this.pos.v[0] = pos[0];
             this.pos.v[1] = pos[1];
-            this.h.rad = pos[2];
-            this.dashed.i = pos[3];
+            this.pos.v[2] = pos[2];
+            this.h.rad = pos[3];
+            this.dashed.i = pos[4];
             this.dash(this.dashed.i);
             return this;
         }
@@ -133,7 +135,7 @@ module T3D {
                   //svg_text = this.text_path + pt_a.v[0] + " " + pt_a.v[1] + ' \n';
                   this.text_path = 'M';
             }
-            json_pt = "[" + pt_a.v[0] + ", " + pt_a.v[1];
+            json_pt = "[" + pt_a.v[0] + ", " + pt_a.v[1] + ", " + pt_a.v[2];
 
             svg_text = this.text_path + pt_b.v[0]*0.3 + " " + pt_b.v[1]*0.3 + ' \n';
             this.text_path = ' L';
@@ -185,6 +187,7 @@ module T3D {
         home() {
             this.pos.v[0] = this.ctx.canvas.width / 2;
             this.pos.v[1] = this.ctx.canvas.height / 2;
+            this.pos.v[2] = 0;
             this.h = new Heading();
             return this;
         }
