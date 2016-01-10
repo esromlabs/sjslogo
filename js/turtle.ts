@@ -112,13 +112,14 @@ module T3D {
             return false;
           }
         }
-        fd(dist: number) {
+        fd(dist: number, rise: number = 0) {
           let svg_text:string = '';
           let json_pt:string = '';
           let pt_a: Vector3 = new Vector3(this.pos.v);
           let pt_b: Vector3;
           this.pos.v[0] = this.pos.v[0] + dist * Math.cos(this.h.rad);
           this.pos.v[1] = this.pos.v[1] + dist * Math.sin(this.h.rad);
+          this.pos.v[2] = this.pos.v[2] + rise;
           pt_b = new Vector3(this.pos.v);
           if (this.pen_down) {
             // start a path output to either svg and/or JSON
@@ -136,7 +137,7 @@ module T3D {
 
             svg_text = this.text_path + pt_b.v[0]*0.3 + " " + pt_b.v[1]*0.3 + ' \n';
             this.text_path = ' L';
-            json_pt +=  ", " + pt_b.v[0] + ", " + pt_b.v[1]+'],\n';
+            json_pt +=  ", " + pt_b.v[0] + ", " + pt_b.v[1] + ", " + pt_b.v[2]+'],\n';
             this.ctx.beginPath();
             this.ctx.moveTo(pt_a.v[0], pt_a.v[1]);
             this.ctx.lineTo(pt_b.v[0], pt_b.v[1]);
@@ -158,8 +159,8 @@ module T3D {
           this.$('#json_out').append(json_pt);
           return this;
         }
-        bk(dist: number) {
-            return this.fd(-dist);
+        bk(dist: number, rise: number = 0) {
+            return this.fd(-dist, -rise);
         }
         rt(turn: number) {
             this.h.add(turn);
