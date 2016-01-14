@@ -129,11 +129,11 @@ yurt.cs();
 yurt.home();
 yurt.pu();
 yurt.lt(90);
-yurt.fd(220);
+yurt.fd(260);
 yurt.rt(90);
 
 yurt.rt(2 * 36);
-var level = 0;
+var level = 5;
 var scale = 280;
 // level one test of 't'
 //t(scale);
@@ -146,7 +146,7 @@ yurt.fd(scale * 1.618034);
 yurt.lt(1 * 36);
 
 yurt.rt(90 - 36);
-yurt.fd(40);
+yurt.fd(80);
 yurt.lt(90 - 36);
 
 // level one test of 'w'

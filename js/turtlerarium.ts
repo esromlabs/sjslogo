@@ -16,6 +16,7 @@ var examples = {
   "circle round": function load() { $.ajax('examples/circleround.js', {'success': function(code) {$('#logo_code').val(code);}}); return 'loading'; }
 };
 
+
 class Page {
   current_script_name:string = "";
   $ = null;
@@ -95,7 +96,7 @@ class Page {
 // classes for projection from 3D to 2D screen.
 class Vector3 {
   v = [];
-  constructor(v) {
+  constructor(v = null) {
     if (v) {
       this.v[0] = v[0];
       this.v[1] = v[1];

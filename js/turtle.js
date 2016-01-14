@@ -121,15 +121,16 @@ var T3D;
                 if (dist > 0) {
                     this.last.v[0] = pt_b.v[0];
                     this.last.v[1] = pt_b.v[1];
+                    this.last.v[2] = pt_b.v[2];
                 }
                 else {
                     this.last.v[0] = this.pos.v[0];
                     this.last.v[1] = this.pos.v[1];
+                    this.last.v[2] = this.pos.v[2];
                 }
             }
             else {
                 this.ctx.moveTo(this.pos.v[0], this.pos.v[1]);
-                this.ctx.arc(this.pos.v[0], this.pos.v[1], 3, 0, 2 * Math.PI);
             }
             this.$('#svg_out').append(svg_text);
             this.$('#json_out').append(json_pt);
@@ -160,6 +161,9 @@ var T3D;
             this.ctx.setLineDash(this.dashed.arr[this.dashed.i]);
         };
         Turtle.prototype.home = function () {
+            this.last = new Vector3();
+            this.last.v[0] = -1;
+            this.last.v[1] = -1;
             this.pos.v[0] = this.ctx.canvas.width / 2;
             this.pos.v[1] = this.ctx.canvas.height / 2;
             this.pos.v[2] = 0;
@@ -205,6 +209,7 @@ var T3D;
             this.pos.v[1] = end_y;
             this.last.v[0] = this.pos.v[0];
             this.last.v[1] = this.pos.v[1];
+            this.last.v[2] = this.pos.v[2];
             return this;
         };
         return Turtle;

@@ -79,6 +79,7 @@ var Page = (function () {
 })();
 var Vector3 = (function () {
     function Vector3(v) {
+        if (v === void 0) { v = null; }
         this.v = [];
         if (v) {
             this.v[0] = v[0];
