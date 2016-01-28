@@ -13,7 +13,8 @@ var examples = {
       }
     });
   },
-  "circle round": function load() { $.ajax('examples/circleround.js', {'success': function(code) {$('#logo_code').val(code);}}); return 'loading'; }
+  "circle round": function load() { $.ajax('examples/circleround.js', {'success': function(code) {$('#logo_code').val(code);}}); return 'loading'; },
+  "got dance": function load() { $.ajax('examples/dancelang.js', {'success': function(code) {$('#logo_code').val(code);}}); return 'loading'; }
 };
 
 
