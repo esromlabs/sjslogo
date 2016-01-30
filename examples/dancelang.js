@@ -1,5 +1,5 @@
 var t = 0;
-var d = [[40, 0], [-40, 0], [0, 60], [40, 0], [-40, 0]];
+var d = [[40, 0], [-40, 0], [0, 60], [40, 0], [-40, 0], [0, -120], [40, 0], [-40, 0]];
       yurt.home();
       yurt.cs();
       man();
@@ -19,15 +19,15 @@ function man () {
   yurt.pd(); // pen down
   yurt.fd(10);
   yurt.rt(90);
+  yurt.fd(10);
+  yurt.rt(90);
   yurt.fd(30);
   yurt.rt(90);
   yurt.fd(20);
   yurt.rt(90);
-  yurt.fd(60);
-  yurt.rt(90);
-  yurt.fd(20);
-  yurt.rt(90);
   yurt.fd(30);
+  yurt.rt(90);
+  yurt.fd(10);
   yurt.lt(90);
   yurt.bk(10);
   yurt.pu(); // pen up
