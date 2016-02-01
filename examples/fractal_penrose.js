@@ -3,9 +3,14 @@ function t (s, rise) {
   'use strict';
   yurt.pd();
   // decorate with an arc that indicates the orientation of the rhombus
-  //yurt.lt(2 * 36);
-  //yurt.arc 4 * 36 :s * 0.618034 / 2
-  //yurt.rt(2 * 36);
+  yurt.push();
+  yurt.lt(2 * 36);
+  yurt.fd(s);
+  yurt.rt(4 * 36);
+  yurt.fd(s * 0.618034);
+  yurt.rt(0.5 * 36);
+  yurt.fd(s * 0.618034);
+  yurt.pop();
 
   yurt.rt(2 * 36);
   yurt.fd(s, rise);
@@ -24,9 +29,13 @@ function w (s, rise) {
   'use strict';
   yurt.pd();
   // decorate with an arc that indicates the orientation of the rhombus
-  //yurt.lt(1 * 36
-  //arc 2 * 36 :s * 0.618034
-  //yurt.rt(1 * 36
+  yurt.push();
+  yurt.lt(1 * 36);
+  yurt.fd(s * 0.618034);
+  yurt.rt(3.5 * 36);
+  yurt.fd(s * 0.618034 * 1.2);
+  yurt.pop();
+
 
   yurt.rt(1 * 36);
   yurt.fd(s, rise);

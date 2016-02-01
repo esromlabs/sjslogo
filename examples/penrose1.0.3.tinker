@@ -1,0 +1,239 @@
+// -------------------------------------------
+// Added Automatically During Library Upgrade.
+// Convenience Declarations For Dependencies.
+// 'Core' Is Configured In Libraries Section.
+// -------------------------------------------
+var Debug = Core.Debug;
+var Mesh3D = Core.Mesh3D;
+var Path2D = Core.Path2D;
+var Plugin = Core.Plugin;
+var Tess = Core.Tess;
+var Solid = Core.Solid;
+
+// -------------------------------------------
+// Fractal Penrose Tile Generator Script:
+// -------------------------------------------
+params = [
+	{ "id": "level", "displayName": "recursive level", "type": "int", "rangeMin": 0, "rangeMax": 16, "default": 2 },
+	{ "id": "tile", "displayName": "Tile type", "type": "list", "listLabels": ["Wide Rhombus", "Narrow Rhombus"], "listValues": ["w", "t"], "default": "w" },
+	{ "id": "size", "displayName": "Size", "type": "length", "rangeMin": 10, "rangeMax": 50, "default": 20 },
+	{ "id": "height", "displayName": "Height", "type": "length", "rangeMin": 0.1, "rangeMax": 10, "default": 1.2 },
+	{ "id": "v1config", "displayName": "1 Vertical Configuration", "type": "int", "rangeMin": 0, "rangeMax": 3, "default": 0 },
+	{ "id": "v2config", "displayName": "2 Vertical Configuration", "type": "int", "rangeMin": 0, "rangeMax": 3, "default": 0 },
+	{ "id": "v3config", "displayName": "3 Vertical Configuration", "type": "int", "rangeMin": 0, "rangeMax": 3, "default": 3 },
+	{ "id": "v4config", "displayName": "4 Vertical Configuration", "type": "int", "rangeMin": 0, "rangeMax": 3, "default": 0 },
+	{ "id": "v5config", "displayName": "5 Vertical Configuration", "type": "int", "rangeMin": 0, "rangeMax": 3, "default": 0 }
+];
+
+function toRad(degrees) { return degrees * 0.0174532925; }
+var v1, v2, v3, v4, v5;
+// yurt is a turtle graphics style vector lib
+var yurt = {
+  x:0,
+  y:0,
+  z:5,
+  heading:0,
+  fd: function (d) {
+      this.x = this.x + d * Math.cos(toRad(this.heading));
+      this.y = this.y + d * Math.sin(toRad(this.heading));
+    },
+  rt: function (t) {this.heading += t;},
+  lt: function (t) {this.rt(-t);},
+  rise: function (h) {this.z += h;}
+};
+
+function t (s, h, mesh, v) {
+  var top_pts = [];
+  var bot_pts = [];
+  var vlevel = (v%2)? yurt.z+h: yurt.z+2*h;
+  var vtilt = (v>1)? 1: -1;
+
+  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  bot_pts.push([yurt.x, yurt.y, 0]);
+
+  yurt.rt(2 * 36);
+  yurt.fd(s);
+  yurt.rise(h);
+
+  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  bot_pts.push([yurt.x, yurt.y, 0]);
+
+  yurt.lt(4 * 36);
+  yurt.fd(s);
+  yurt.rise(h);
+
+  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  bot_pts.push([yurt.x, yurt.y, 0]);
+
+  yurt.lt(1 * 36);
+  yurt.fd(s);
+  yurt.rise(-h);
+
+  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  bot_pts.push([yurt.x, yurt.y, 0]);
+
+  yurt.lt(4 * 36);
+  yurt.fd(s);
+  yurt.rise(-h);
+
+
+  yurt.lt(1 * 36);
+  yurt.lt(2 * 36);
+
+  //top surface
+  mesh.quad(top_pts[0], top_pts[1], top_pts[2], top_pts[3]);
+  // sides
+  mesh.quad(top_pts[0], top_pts[1], bot_pts[1], bot_pts[0]);
+  mesh.quad(top_pts[1], top_pts[2], bot_pts[2], bot_pts[1]);
+  mesh.quad(top_pts[2], top_pts[3], bot_pts[3], bot_pts[2]);
+  mesh.quad(top_pts[3], top_pts[0], bot_pts[0], bot_pts[3]);
+  // bottom
+  mesh.quad(bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]);
+
+}
+
+function w (s, h, mesh, v) {
+  var top_pts = [];
+  var bot_pts = [];
+  var vlevel = (v%2)? yurt.z+h: yurt.z+2*h;
+  var vtilt = (v>1)? 1: -1;
+
+  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  bot_pts.push([yurt.x, yurt.y, 0]);
+
+  yurt.rt(1 * 36);
+  yurt.fd(s);
+  yurt.rise(h);
+
+  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  bot_pts.push([yurt.x, yurt.y, 0]);
+
+  yurt.lt(2 * 36);
+  yurt.fd(s);
+  yurt.rise(h);
+
+  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  bot_pts.push([yurt.x, yurt.y, 0]);
+
+  yurt.lt(3 * 36);
+  yurt.fd(s);
+  yurt.rise(-h);
+
+  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  bot_pts.push([yurt.x, yurt.y, 0]);
+
+  yurt.lt(2 * 36);
+  yurt.fd(s);
+  yurt.rise(-h);
+
+
+  yurt.lt(3 * 36);
+  yurt.lt(1 * 36);
+
+  //top surface
+  mesh.quad(top_pts[0], top_pts[1], top_pts[2], top_pts[3]);
+  // sides
+  mesh.quad(top_pts[0], top_pts[1], bot_pts[1], bot_pts[0]);
+  mesh.quad(top_pts[1], top_pts[2], bot_pts[2], bot_pts[1]);
+  mesh.quad(top_pts[2], top_pts[3], bot_pts[3], bot_pts[2]);
+  mesh.quad(top_pts[3], top_pts[0], bot_pts[0], bot_pts[3]);
+  // bottom
+  mesh.quad(bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]);
+}
+
+function gen (s, k, depth, h, mesh) {
+  //'use strict';
+  var dep, scale;
+  if (depth < 1) {
+    //setcolor :depth
+    if (k === 't') {
+      t(s, h, mesh);
+    }
+    if (k === 'w') {
+      w(s, h, mesh);
+    }
+  }
+  else {
+    dep = depth -1;
+    scale = s * 0.618034;
+
+    if (k === 't') {
+      // generate a t and w
+      // first the t
+      yurt.fd(scale);
+      yurt.rt(3 * 36);
+
+      gen(scale, 't', dep, h, mesh, params.v1config);
+
+      yurt.lt(2 * 36);
+      yurt.fd(scale);
+      yurt.rt(3 * 36);
+
+      gen(scale, 'w', dep, h, mesh, params.v2config);
+
+      yurt.rt(1 * 36);
+      yurt.fd(scale);
+      yurt.rt(1 * 36);
+      yurt.fd(scale);
+
+      yurt.rt(4 * 36);
+  }
+    if (k === 'w') {
+      // w -> w t w
+      // first generate w
+      yurt.rt(2 * 36);
+      yurt.fd(s);
+      yurt.rt(5 * 36);
+
+      gen(scale, 'w', dep, -h, mesh, params.v3config);
+
+      yurt.rt(2 * 36);
+      yurt.fd(scale);
+      yurt.lt(3 * 36);
+
+      gen(scale, 't', dep, -h, mesh, params.v4config);
+
+      // lastly another w
+
+      yurt.rt(2 * 36);
+      yurt.fd(scale);
+      yurt.rt(2 * 36);
+      yurt.fd(scale);
+      yurt.rt(4 * 36);
+
+      gen(scale, 'w', dep, h, mesh, params.v5config);
+
+      yurt.rt(1 * 36);
+      yurt.fd(s * 1.618034);
+      yurt.lt(5 * 36);
+    }
+  }
+}
+
+function process(params) {
+
+	var level = params['level'] || 2;
+	var tile = params['tile'] || 'w';
+	var size = params["size"] || 4;
+	var h = params["height"] || 1;
+	v1 = params["v1config"] || 0;
+	v2 = params["v2config"] || 0;
+	v3 = params["v3config"] || 3;
+	v4 = params["v4config"] || 0;
+	v5 = params["v5config"] || 0;
+
+
+	var mesh = new Mesh3D();
+
+    gen(size, tile, level, h, mesh);
+
+	return Solid.make(mesh);
+}
+// -------------------------------------------
+// Added Automatically During Library Upgrade.
+// Original Shape Color. Changing Effects The
+// Default Color In All Documents Where Used.
+// -------------------------------------------
+presets = [
+  { 'color': [250, 110, 7] }
+];
