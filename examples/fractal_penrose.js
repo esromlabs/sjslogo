@@ -9,7 +9,7 @@ function t (s, rise) {
   yurt.rt(4 * 36);
   yurt.fd(s * 0.618034);
   yurt.rt(0.5 * 36);
-  yurt.fd(s * 0.618034);
+  yurt.fd(s * 0.618034 *1.18);
   yurt.pop();
 
   yurt.rt(2 * 36);
@@ -33,7 +33,7 @@ function w (s, rise) {
   yurt.lt(1 * 36);
   yurt.fd(s * 0.618034);
   yurt.rt(3.5 * 36);
-  yurt.fd(s * 0.618034 * 1.2);
+  yurt.fd(s * 0.618034 * 1.18);
   yurt.pop();
 
 
