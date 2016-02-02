@@ -141,7 +141,7 @@ function w (s, h, mesh, v) {
   mesh.quad(bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]);
 }
 
-function gen (s, k, depth, h, mesh) {
+function gen (s, k, depth, h, mesh, v) {
   //'use strict';
   var dep, scale;
   if (depth < 1) {
