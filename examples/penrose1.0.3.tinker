@@ -1,3 +1,12 @@
+/**
+Recursive Shape Generator for Fractal Penrose Tiles
+<h1>Level of Recursive Generation</h1>
+You can control the shapes perimeter with the Level of Recursive Generation slider.
+<h2>Recursive Level 0</h2>
+Level 0 is equivalent to the Penrose Rhombus Tiles...
+@module bZEsZoFg95i
+**/
+
 // -------------------------------------------
 // Added Automatically During Library Upgrade.
 // Convenience Declarations For Dependencies.
@@ -14,8 +23,8 @@ var Solid = Core.Solid;
 // Fractal Penrose Tile Generator Script:
 // -------------------------------------------
 params = [
-	{ "id": "level", "displayName": "recursive level", "type": "int", "rangeMin": 0, "rangeMax": 14, "default": 3 },
-	{ "id": "tile", "displayName": "Tile type", "type": "list", "listLabels": ["Wide Rhombus", "Narrow Rhombus"], "listValues": ["w", "t"], "default": "w" },
+	{ "id": "level", "displayName": "Recursive Level", "type": "int", "rangeMin": 0, "rangeMax": 14, "default": 2 },
+	{ "id": "tile", "displayName": "Tile Type", "type": "list", "listLabels": ["Wide Rhombus", "Narrow Rhombus"], "listValues": ["w", "n"], "default": "w" },
 	{ "id": "size", "displayName": "Size", "type": "length", "rangeMin": 10, "rangeMax": 50, "default": 20 },
 	{ "id": "vertical_scale", "displayName": "Vertical Scale", "type": "length", "rangeMin": 0.1, "rangeMax": 10, "default": 1.2 }
 ];
@@ -39,40 +48,41 @@ var yurt = {
 };
 
 // the narrow tile
-// s->scale, h->height scaling, mesh->3d drawing context, l->level
-function t (s, h, mesh, l) {
+// s->scale, vs->vertical scale, mesh->3d drawing context, vl->vertical level
+function n (s, vs, mesh, vl) {
   var top_pts = [];
   var bot_pts = [];
-  var vtilt = (l === 1)? 1: -1;
+  var vtilt = (vl === 1)? -1.0: 1.0;
+	vl = (vl === 1)? 3: 0;
 
-  top_pts.push([yurt.x, yurt.y, 0]);
+	yurt.level(vl*vs);
+  top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.rt(2 * 36);
   yurt.fd(s);
-	yurt.level(l*h);
-  yurt.rise(h*vtilt);
+  yurt.rise(vs*vtilt);
 
-  top_pts.push([yurt.x, yurt.y, 0]);
+  top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(4 * 36);
   yurt.fd(s);
-  yurt.rise(h*vtilt);
+  yurt.rise(vs*vtilt);
 
-  top_pts.push([yurt.x, yurt.y, 0]);
+  top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(1 * 36);
   yurt.fd(s);
-  yurt.rise(h*vtilt*-1);
+  yurt.rise(vs*vtilt*-1);
 
-  top_pts.push([yurt.x, yurt.y, 0]);
+  top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(4 * 36);
   yurt.fd(s);
-  yurt.rise(h*vtilt*-1);
+  yurt.rise(vs*vtilt*-1);
 
   yurt.lt(1 * 36);
   yurt.lt(2 * 36);
@@ -89,39 +99,39 @@ function t (s, h, mesh, l) {
 
 }
 
-function w (s, h, mesh, l) {
+function w (s, vs, mesh, vl) {
   var top_pts = [];
   var bot_pts = [];
-	var vtilt = (l === 1)? 1: -1;
+	var vtilt = (vl === 1)? 1: -1;
 
-  top_pts.push([yurt.x, yurt.y, 0]);
+	yurt.level(vl*vs);
+  top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.rt(1 * 36);
   yurt.fd(s);
-	yurt.level(l*h);
-  yurt.rise(h*vtilt);
+  yurt.rise(vs*vtilt);
 
-  top_pts.push([yurt.x, yurt.y, 0]);
+  top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(2 * 36);
   yurt.fd(s);
-  yurt.rise(h*vtilt);
+  yurt.rise(vs*vtilt);
 
-  top_pts.push([yurt.x, yurt.y, 0]);
+  top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(3 * 36);
   yurt.fd(s);
-  yurt.rise(h*vtilt*-1);
+  yurt.rise(vs*vtilt*-1);
 
-  top_pts.push([yurt.x, yurt.y, 0]);
+  top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(2 * 36);
   yurt.fd(s);
-  yurt.rise(h*vtilt*-1);
+  yurt.rise(vs*vtilt*-1);
 
 
   yurt.lt(3 * 36);
@@ -142,33 +152,33 @@ function w (s, h, mesh, l) {
 // h->height-scale-factor, mesh->3d drawing context, v-vertical level
 function gen (s, k, depth, h, mesh, v) {
   //'use strict';
-  var scale;
+  var scale, dep, new_v;
   if (depth < 1) {
-    //setcolor :depth
-    if (k === 't') {
-      t(s, h, mesh, v);
-    }
     if (k === 'w') {
       w(s, h, mesh, v);
     }
+		else {
+			n(s, h, mesh, v);
+		}
   }
   else {
-    dep = depth -1;
+    dep = depth - 1;
     scale = s * 0.618034;
 
-    if (k === 't') {
-      // generate a t and w
-      // first the t
+    if (k === 'n') {
+      // generate a narrow and wide
+      // first the narrow tile
       yurt.fd(scale);
       yurt.rt(3 * 36);
-
-      gen(scale, 't', dep, h, mesh, 1);
+			new_v = (v === 1)? 1: 2;
+      gen(scale, 'n', dep, h, mesh, new_v);
 
       yurt.lt(2 * 36);
       yurt.fd(scale);
       yurt.rt(3 * 36);
 
-      gen(scale, 'w', dep, h, mesh, 2);
+			new_v = (v === 2)? 1: 2;
+      gen(scale, 'w', dep, h, mesh, new_v);
 
       yurt.rt(1 * 36);
       yurt.fd(scale);
@@ -176,42 +186,45 @@ function gen (s, k, depth, h, mesh, v) {
       yurt.fd(scale);
 
       yurt.rt(4 * 36);
-  }
-    if (k === 'w') {
-      // w -> w t w
-      // first generate w
-      yurt.rt(2 * 36);
-      yurt.fd(s);
-      yurt.rt(5 * 36);
+	  }
+	  if (k === 'w') {
+	    // w -> w n w
+	    // first generate w
+	    yurt.rt(2 * 36);
+	    yurt.fd(s);
+	    yurt.rt(5 * 36);
 
-      gen(scale, 'w', dep, -h, mesh, 2);
+			new_v = (v === 1)? 1: 2;
+	    gen(scale, 'w', dep, h, mesh, new_v);
 
-      yurt.rt(2 * 36);
-      yurt.fd(scale);
-      yurt.lt(3 * 36);
+	    yurt.rt(2 * 36);
+	    yurt.fd(scale);
+	    yurt.lt(3 * 36);
 
-      gen(scale, 't', dep, -h, mesh, 1);
+			new_v = (v === 2)? 1: 2;
+	    gen(scale, 'n', dep, h, mesh, new_v);
 
-      // lastly another w
+	    // lastly another w
 
-      yurt.rt(2 * 36);
-      yurt.fd(scale);
-      yurt.rt(2 * 36);
-      yurt.fd(scale);
-      yurt.rt(4 * 36);
+	    yurt.rt(2 * 36);
+	    yurt.fd(scale);
+	    yurt.rt(2 * 36);
+	    yurt.fd(scale);
+	    yurt.rt(4 * 36);
 
-      gen(scale, 'w', dep, h, mesh, 1);
+			new_v = (v === 2)? 1: 2;
+	    gen(scale, 'w', dep, h, mesh, new_v);
 
-      yurt.rt(1 * 36);
-      yurt.fd(s * 1.618034);
-      yurt.lt(5 * 36);
-    }
-  }
+	    yurt.rt(1 * 36);
+	    yurt.fd(s * 1.618034);
+	    yurt.lt(5 * 36);
+	  }
+	}
 }
 
 function process(params) {
 
-	var level = params['level'] || 3;
+	var level = params['level'] || 0;
 	var tile = params['tile'] || 'w';
 	var size = params["size"] || 4;
 	var vertical_scale = params["vertical_scale"] || 1.2;
@@ -231,5 +244,5 @@ function process(params) {
 // Default Color In All Documents Where Used.
 // -------------------------------------------
 presets = [
-  { 'color': [250, 110, 7] }
+  { 'color': [210, 10, 250] }
 ];
