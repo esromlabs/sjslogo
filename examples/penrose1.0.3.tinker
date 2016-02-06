@@ -14,7 +14,7 @@ var Solid = Core.Solid;
 // Fractal Penrose Tile Generator Script:
 // -------------------------------------------
 params = [
-	{ "id": "level", "displayName": "recursive level", "type": "int", "rangeMin": 0, "rangeMax": 16, "default": 2 },
+	{ "id": "level", "displayName": "recursive level", "type": "int", "rangeMin": 0, "rangeMax": 14, "default": 3 },
 	{ "id": "tile", "displayName": "Tile type", "type": "list", "listLabels": ["Wide Rhombus", "Narrow Rhombus"], "listValues": ["w", "t"], "default": "w" },
 	{ "id": "size", "displayName": "Size", "type": "length", "rangeMin": 10, "rangeMax": 50, "default": 20 },
 	{ "id": "vertical_scale", "displayName": "Vertical Scale", "type": "length", "rangeMin": 0.1, "rangeMax": 10, "default": 1.2 }
@@ -45,7 +45,7 @@ function t (s, h, mesh, l) {
   var bot_pts = [];
   var vtilt = (l === 1)? 1: -1;
 
-  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  top_pts.push([yurt.x, yurt.y, 0]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.rt(2 * 36);
@@ -53,21 +53,21 @@ function t (s, h, mesh, l) {
 	yurt.level(l*h);
   yurt.rise(h*vtilt);
 
-  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  top_pts.push([yurt.x, yurt.y, 0]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(4 * 36);
   yurt.fd(s);
   yurt.rise(h*vtilt);
 
-  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  top_pts.push([yurt.x, yurt.y, 0]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(1 * 36);
   yurt.fd(s);
   yurt.rise(h*vtilt*-1);
 
-  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  top_pts.push([yurt.x, yurt.y, 0]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(4 * 36);
@@ -94,7 +94,7 @@ function w (s, h, mesh, l) {
   var bot_pts = [];
 	var vtilt = (l === 1)? 1: -1;
 
-  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  top_pts.push([yurt.x, yurt.y, 0]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.rt(1 * 36);
@@ -102,21 +102,21 @@ function w (s, h, mesh, l) {
 	yurt.level(l*h);
   yurt.rise(h*vtilt);
 
-  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  top_pts.push([yurt.x, yurt.y, 0]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(2 * 36);
   yurt.fd(s);
   yurt.rise(h*vtilt);
 
-  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  top_pts.push([yurt.x, yurt.y, 0]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(3 * 36);
   yurt.fd(s);
   yurt.rise(h*vtilt*-1);
 
-  top_pts.push([yurt.x, yurt.y, Math.abs(yurt.z + vlevel*vtilt)]);
+  top_pts.push([yurt.x, yurt.y, 0]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(2 * 36);
@@ -211,16 +211,17 @@ function gen (s, k, depth, h, mesh, v) {
 
 function process(params) {
 
-	var level = params['level'] || 2;
+	var level = params['level'] || 3;
 	var tile = params['tile'] || 'w';
 	var size = params["size"] || 4;
-	var vertical_scale = params["vertical_scale"] || 1;
+	var vertical_scale = params["vertical_scale"] || 1.2;
 
 	var mesh = new Mesh3D();
 	var starting_tilt = true;
 	var starting_z = 0;
+	var starting_vLevel = (tile === 'w')? 1: 2;
 
-  gen(size, tile, level, vertical_scale, mesh, starting_z, true);
+  gen(size, tile, level, vertical_scale, mesh, starting_vLevel);
 
 	return Solid.make(mesh);
 }
