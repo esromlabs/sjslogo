@@ -47,9 +47,11 @@ var yurt = {
 	level: function (l) {this.z = l;}
 };
 
+var shape = {top:[], side:[]};
+
 // the narrow tile
 // s->scale, vs->vertical scale, mesh->3d drawing context, vl->vertical level
-function n (s, vs, mesh, vl) {
+function n (s, vs, vl) {
   var top_pts = [];
   var bot_pts = [];
   var vtilt = (vl === 1)? -1.0: 1.0;
@@ -88,14 +90,12 @@ function n (s, vs, mesh, vl) {
   yurt.lt(2 * 36);
 
   //top surface
-  mesh.quad(top_pts[0], top_pts[1], top_pts[2], top_pts[3]);
+  shape.top.push([top_pts[0], top_pts[1], top_pts[2], top_pts[3]]);
   // sides
-  mesh.quad(top_pts[0], top_pts[1], bot_pts[1], bot_pts[0]);
-  mesh.quad(top_pts[1], top_pts[2], bot_pts[2], bot_pts[1]);
-  mesh.quad(top_pts[2], top_pts[3], bot_pts[3], bot_pts[2]);
-  mesh.quad(top_pts[3], top_pts[0], bot_pts[0], bot_pts[3]);
-  // bottom
-  mesh.quad(bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]);
+  shape.side.push([top_pts[0], top_pts[1]]);
+  shape.side.push([top_pts[1], top_pts[2]]);
+  shape.side.push([top_pts[2], top_pts[3]]);
+  shape.side.push([top_pts[3], top_pts[0]]);
 
 }
 
@@ -138,27 +138,26 @@ function w (s, vs, mesh, vl) {
   yurt.lt(1 * 36);
 
   //top surface
-  mesh.quad(top_pts[0], top_pts[1], top_pts[2], top_pts[3]);
+  shape.top.push([top_pts[0], top_pts[1], top_pts[2], top_pts[3]]);
   // sides
-  mesh.quad(top_pts[0], top_pts[1], bot_pts[1], bot_pts[0]);
-  mesh.quad(top_pts[1], top_pts[2], bot_pts[2], bot_pts[1]);
-  mesh.quad(top_pts[2], top_pts[3], bot_pts[3], bot_pts[2]);
-  mesh.quad(top_pts[3], top_pts[0], bot_pts[0], bot_pts[3]);
-  // bottom
-  mesh.quad(bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]);
+  shape.side.push([top_pts[0], top_pts[1]]);
+  shape.side.push([top_pts[1], top_pts[2]]);
+  shape.side.push([top_pts[2], top_pts[3]]);
+  shape.side.push([top_pts[3], top_pts[0]]);
+
 }
 
 // s->scale, k->kind[wide, narrow], depth->recursive depth,
 // h->height-scale-factor, mesh->3d drawing context, v-vertical level
-function gen (s, k, depth, h, mesh, v) {
+function gen (s, k, depth, h, v) {
   //'use strict';
   var scale, dep, new_v;
   if (depth < 1) {
     if (k === 'w') {
-      w(s, h, mesh, v);
+      w(s, h, v);
     }
 		else {
-			n(s, h, mesh, v);
+			n(s, h, v);
 		}
   }
   else {
@@ -171,14 +170,14 @@ function gen (s, k, depth, h, mesh, v) {
       yurt.fd(scale);
       yurt.rt(3 * 36);
 			new_v = (v === 1)? 1: 2;
-      gen(scale, 'n', dep, h, mesh, new_v);
+      gen(scale, 'n', dep, h, new_v);
 
       yurt.lt(2 * 36);
       yurt.fd(scale);
       yurt.rt(3 * 36);
 
 			new_v = (v === 2)? 1: 2;
-      gen(scale, 'w', dep, h, mesh, new_v);
+      gen(scale, 'w', dep, h, new_v);
 
       yurt.rt(1 * 36);
       yurt.fd(scale);
@@ -195,14 +194,14 @@ function gen (s, k, depth, h, mesh, v) {
 	    yurt.rt(5 * 36);
 
 			new_v = (v === 1)? 1: 2;
-	    gen(scale, 'w', dep, h, mesh, new_v);
+	    gen(scale, 'w', dep, h, new_v);
 
 	    yurt.rt(2 * 36);
 	    yurt.fd(scale);
 	    yurt.lt(3 * 36);
 
 			new_v = (v === 2)? 1: 2;
-	    gen(scale, 'n', dep, h, mesh, new_v);
+	    gen(scale, 'n', dep, h, new_v);
 
 	    // lastly another w
 
@@ -213,7 +212,7 @@ function gen (s, k, depth, h, mesh, v) {
 	    yurt.rt(4 * 36);
 
 			new_v = (v === 2)? 1: 2;
-	    gen(scale, 'w', dep, h, mesh, new_v);
+	    gen(scale, 'w', dep, h, new_v);
 
 	    yurt.rt(1 * 36);
 	    yurt.fd(s * 1.618034);
@@ -222,19 +221,37 @@ function gen (s, k, depth, h, mesh, v) {
 	}
 }
 
+function dedup() {
+
+}
+
+function produce_mesh (mesh) {
+  //top surface
+  mesh.quad(top_pts[0], top_pts[1], top_pts[2], top_pts[3]);
+  // sides
+  mesh.quad(top_pts[0], top_pts[1], bot_pts[1], bot_pts[0]);
+  mesh.quad(top_pts[1], top_pts[2], bot_pts[2], bot_pts[1]);
+  mesh.quad(top_pts[2], top_pts[3], bot_pts[3], bot_pts[2]);
+  mesh.quad(top_pts[3], top_pts[0], bot_pts[0], bot_pts[3]);
+  // bottom
+  mesh.quad(bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]);
+}
+
 function process(params) {
 
 	var level = params['level'] || 0;
 	var tile = params['tile'] || 'w';
 	var size = params["size"] || 4;
 	var vertical_scale = params["vertical_scale"] || 1.2;
-
+	
 	var mesh = new Mesh3D();
 	var starting_tilt = true;
 	var starting_z = 0;
 	var starting_vLevel = (tile === 'w')? 1: 2;
 
-  gen(size, tile, level, vertical_scale, mesh, starting_vLevel);
+  gen(size, tile, level, vertical_scale, starting_vLevel);
+  dedup();
+  produce_mesh(mesh);
 
 	return Solid.make(mesh);
 }
