@@ -227,14 +227,20 @@ function dedup() {
 
 function produce_mesh (mesh) {
   //top surface
-  mesh.quad(top_pts[0], top_pts[1], top_pts[2], top_pts[3]);
+	shape.top.forEach(function(pts) {
+		mesh.quad(pts[0], pts[1], pts[2], pts[3]);
+	});
   // sides
-  mesh.quad(top_pts[0], top_pts[1], bot_pts[1], bot_pts[0]);
-  mesh.quad(top_pts[1], top_pts[2], bot_pts[2], bot_pts[1]);
-  mesh.quad(top_pts[2], top_pts[3], bot_pts[3], bot_pts[2]);
-  mesh.quad(top_pts[3], top_pts[0], bot_pts[0], bot_pts[3]);
+	shape.bottom.forEach(function(pts) {
+		mesh.quad(pts[0], pts[1], bot_pts[1], bot_pts[0]);
+	  mesh.quad(pts[1], pts[2], bot_pts[2], bot_pts[1]);
+	  mesh.quad(pts[2], pts[3], bot_pts[3], bot_pts[2]);
+	  mesh.quad(pts[3], pts[0], bot_pts[0], bot_pts[3]);
+	});
   // bottom
-  mesh.quad(bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]);
+	shape.bottom.forEach(function(pts) {
+		mesh.quad(pts[0], pts[1], pts[2], pts[3]);
+	});
 }
 
 function process(params) {
@@ -243,7 +249,7 @@ function process(params) {
 	var tile = params['tile'] || 'w';
 	var size = params["size"] || 4;
 	var vertical_scale = params["vertical_scale"] || 1.2;
-	
+
 	var mesh = new Mesh3D();
 	var starting_tilt = true;
 	var starting_z = 0;
