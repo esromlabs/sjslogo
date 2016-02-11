@@ -93,9 +93,13 @@ function n (s, vs, vl) {
   shape.top.push([top_pts[0], top_pts[1], top_pts[2], top_pts[3]]);
   // sides
   shape.side.push([top_pts[0], top_pts[1]]);
+	shape.side_skip.push(false);
   shape.side.push([top_pts[1], top_pts[2]]);
-  shape.side.push([top_pts[2], top_pts[3]]);
+	shape.side_skip.push(false);
   shape.side.push([top_pts[3], top_pts[0]]);
+	shape.side_skip.push(false);
+  shape.side.push([top_pts[2], top_pts[3]]);
+	shape.side_skip.push(false);
 
 }
 
@@ -141,9 +145,13 @@ function w (s, vs, mesh, vl) {
   shape.top.push([top_pts[0], top_pts[1], top_pts[2], top_pts[3]]);
   // sides
   shape.side.push([top_pts[0], top_pts[1]]);
+	shape.side_skip.push(false);
   shape.side.push([top_pts[1], top_pts[2]]);
+	shape.side_skip.push(false);
   shape.side.push([top_pts[2], top_pts[3]]);
+	shape.side_skip.push(false);
   shape.side.push([top_pts[3], top_pts[0]]);
+	shape.side_skip.push(false);
 
 }
 
@@ -231,15 +239,24 @@ function produce_mesh (mesh) {
 		mesh.quad(pts[0], pts[1], pts[2], pts[3]);
 	});
   // sides
-	shape.bottom.forEach(function(pts) {
-		mesh.quad(pts[0], pts[1], bot_pts[1], bot_pts[0]);
-	  mesh.quad(pts[1], pts[2], bot_pts[2], bot_pts[1]);
-	  mesh.quad(pts[2], pts[3], bot_pts[3], bot_pts[2]);
-	  mesh.quad(pts[3], pts[0], bot_pts[0], bot_pts[3]);
+	shape.side.forEach(function(pts, i) {
+		var bot_a;
+		var bot_b;
+		var bot_pts;
+		if (!shape.side_skip[i]) {
+			bot_a = [pts[0][0],pts[0][1],0];
+			bot_b = [pts[1][0],pts[1][1],0];
+			bot_pts = [bot_a, bot_b];
+			mesh.quad(pts[0], pts[1], bot_pts[1], bot_pts[0]);
+		}
 	});
   // bottom
-	shape.bottom.forEach(function(pts) {
-		mesh.quad(pts[0], pts[1], pts[2], pts[3]);
+	shape.top.forEach(function(pts) {
+		var bot_a = [pts[0][0],pts[0][1],0];
+		var bot_b = [pts[1][0],pts[1][1],0];
+		var bot_c = [pts[2][0],pts[2][1],0];
+		var bot_d = [pts[3][0],pts[3][1],0];
+		mesh.quad(bot_a, bot_b, bot_c, bot_d);
 	});
 }
 
