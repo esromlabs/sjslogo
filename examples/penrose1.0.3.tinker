@@ -25,8 +25,10 @@ var Solid = Core.Solid;
 params = [
 	{ "id": "level", "displayName": "Recursive Level", "type": "int", "rangeMin": 0, "rangeMax": 14, "default": 2 },
 	{ "id": "tile", "displayName": "Tile Type", "type": "list", "listLabels": ["Wide Rhombus", "Narrow Rhombus"], "listValues": ["w", "n"], "default": "w" },
-	{ "id": "size", "displayName": "Size", "type": "length", "rangeMin": 10, "rangeMax": 50, "default": 20 },
-	{ "id": "vertical_scale", "displayName": "Vertical Scale", "type": "length", "rangeMin": 0.1, "rangeMax": 10, "default": 1.2 }
+	{ "id": "size", "displayName": "Size", "type": "length", "rangeMin": 1, "rangeMax": 40, "default": 20 },
+	{ "id": "invert", "displayName": "Invert Terrain", "type": "bool", "default": false },
+	{ "id": "vertical_scale", "displayName": "Vertical Scale", "type": "float", "rangeMin": -2, "rangeMax": 2, "default": 1 },
+	{ "id": "base", "displayName": "Base Height", "type": "float", "rangeMin": -20, "rangeMax": 20, "default": 2 }
 ];
 
 function toRad(degrees) { return degrees * 0.0174532925; }
@@ -48,6 +50,9 @@ var yurt = {
 };
 
 var shape = {top:[], side:[], side_skip:[]};
+var base = 2;
+var invert = false;
+var Phi = 1.618033989, phi = 0.618033989;
 
 // the narrow tile
 // s->scale, vs->vertical scale, mesh->3d drawing context, vl->vertical level
@@ -56,35 +61,39 @@ function n (s, vs, vl) {
   var bot_pts = [];
   var vtilt = (vl === 1)? -1.0: 1.0;
 	vl = (vl === 1)? 3: 0;
+	if (invert) {
+		vtilt = vtilt * -1;
+		vl = (vl === 3)? 0: 3;
+	}
 
-	yurt.level(1 + vl*vs);
+	yurt.level(base + vl*vs*s);
   top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.rt(2 * 36);
   yurt.fd(s);
-  yurt.rise(vs*vtilt);
+  yurt.rise(vs*vtilt*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(4 * 36);
   yurt.fd(s);
-  yurt.rise(vs*vtilt);
+  yurt.rise(vs*vtilt*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(1 * 36);
   yurt.fd(s);
-  yurt.rise(vs*vtilt*-1);
+  yurt.rise(vs*vtilt*-1*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(4 * 36);
   yurt.fd(s);
-  yurt.rise(vs*vtilt*-1);
+  yurt.rise(vs*vtilt*-1*s);
 
   yurt.lt(1 * 36);
   yurt.lt(2 * 36);
@@ -108,35 +117,39 @@ function w (s, vs, vl) {
   var top_pts = [];
   var bot_pts = [];
 	var vtilt = (vl === 1)? 1: -1;
+	if (invert) {
+		vtilt = vtilt * -1;
+		vl = (vl === 1)? 2: 1;
+	}
 
-	yurt.level(1 + vl*vs);
+	yurt.level(base + vl*vs*s);
   top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.rt(1 * 36);
   yurt.fd(s);
-  yurt.rise(vs*vtilt);
+  yurt.rise(vs*vtilt*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(2 * 36);
   yurt.fd(s);
-  yurt.rise(vs*vtilt);
+  yurt.rise(vs*vtilt*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(3 * 36);
   yurt.fd(s);
-  yurt.rise(vs*vtilt*-1);
+  yurt.rise(vs*vtilt*-1*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
   bot_pts.push([yurt.x, yurt.y, 0]);
 
   yurt.lt(2 * 36);
   yurt.fd(s);
-  yurt.rise(vs*vtilt*-1);
+  yurt.rise(vs*vtilt*-1*s);
 
 
   yurt.lt(3 * 36);
@@ -171,7 +184,7 @@ function gen (s, k, depth, h, v) {
   }
   else {
     dep = depth - 1;
-    scale = s * 0.618034;
+    scale = s * phi;
 
     if (k === 'n') {
       // generate a narrow and wide
@@ -224,7 +237,7 @@ function gen (s, k, depth, h, v) {
 	    gen(scale, 'w', dep, h, new_v);
 
 	    yurt.rt(1 * 36);
-	    yurt.fd(s * 1.618034);
+	    yurt.fd(s * Phi);
 	    yurt.lt(5 * 36);
 	  }
 	}
@@ -296,8 +309,15 @@ function process(params) {
 
 	var level = params['level'] || 0;
 	var tile = params['tile'] || 'w';
-	var size = params["size"] || 4;
-	var vertical_scale = params["vertical_scale"] || 1.2;
+	var size = params["size"] || 1;
+	// calc the natural height of the Penrose tile (the Morse Elevation)
+	var term1 = Math.cos(toRad(54));
+	var term2 = Math.cos(toRad(36));
+	var me = 0.5 * Math.sqrt(4*(Phi*Phi*term1*term1 - term2*term2));
+	var vertical_scale = params["vertical_scale"] || 1.0;
+	vertical_scale = vertical_scale * me;
+	base = params["base"] || 1;
+	invert = params["invert"] || false;
 
 	var mesh = new Mesh3D();
 	var starting_tilt = true;
@@ -316,5 +336,5 @@ function process(params) {
 // Default Color In All Documents Where Used.
 // -------------------------------------------
 presets = [
-  { 'color': [210, 10, 250] }
+  { 'color': [200, 160, 220] }
 ];
