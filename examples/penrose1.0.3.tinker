@@ -27,6 +27,7 @@ params = [
 	{ "id": "tile", "displayName": "Tile Type", "type": "list", "listLabels": ["Wide Rhombus", "Narrow Rhombus"], "listValues": ["w", "n"], "default": "w" },
 	{ "id": "size", "displayName": "Size", "type": "length", "rangeMin": 1, "rangeMax": 40, "default": 20 },
 	{ "id": "invert", "displayName": "Invert Terrain", "type": "bool", "default": false },
+	{ "id": "flat_bottom", "displayName": "Flat Bottom", "type": "bool", "default": true },
 	{ "id": "vertical_scale", "displayName": "Vertical Scale", "type": "float", "rangeMin": -2, "rangeMax": 2, "default": 1 },
 	{ "id": "base", "displayName": "Base Height", "type": "float", "rangeMin": -20, "rangeMax": 20, "default": 2 }
 ];
@@ -49,9 +50,10 @@ var yurt = {
 	level: function (l) {this.z = l;}
 };
 
-var shape = {top:[], side:[], side_skip:[]};
+var shape = {top:[], side:[], side_skip:[], bottom:[]};
 var base = 2;
 var invert = false;
+var flat_bottom = true;
 var Phi = 1.618033989, phi = 0.618033989;
 
 // the narrow tile
@@ -68,28 +70,48 @@ function n (s, vs, vl) {
 
 	yurt.level(base + vl*vs*s);
   top_pts.push([yurt.x, yurt.y, yurt.z]);
-  bot_pts.push([yurt.x, yurt.y, 0]);
+  if (flat_bottom) {
+		bot_pts.push([yurt.x, yurt.y, 0]);
+	}
+	else {
+		bot_pts.push([yurt.x, yurt.y, yurt.z-s*vtilt]);
+	}
 
   yurt.rt(2 * 36);
   yurt.fd(s);
   yurt.rise(vs*vtilt*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
-  bot_pts.push([yurt.x, yurt.y, 0]);
+	if (flat_bottom) {
+		bot_pts.push([yurt.x, yurt.y, 0]);
+	}
+	else {
+		bot_pts.push([yurt.x, yurt.y, yurt.z-s*vtilt]);
+	}
 
   yurt.lt(4 * 36);
   yurt.fd(s);
   yurt.rise(vs*vtilt*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
-  bot_pts.push([yurt.x, yurt.y, 0]);
+	if (flat_bottom) {
+		bot_pts.push([yurt.x, yurt.y, 0]);
+	}
+	else {
+		bot_pts.push([yurt.x, yurt.y, yurt.z-s*vtilt]);
+	}
 
   yurt.lt(1 * 36);
   yurt.fd(s);
   yurt.rise(vs*vtilt*-1*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
-  bot_pts.push([yurt.x, yurt.y, 0]);
+	if (flat_bottom) {
+		bot_pts.push([yurt.x, yurt.y, 0]);
+	}
+	else {
+		bot_pts.push([yurt.x, yurt.y, yurt.z-s*vtilt]);
+	}
 
   yurt.lt(4 * 36);
   yurt.fd(s);
@@ -98,18 +120,19 @@ function n (s, vs, vl) {
   yurt.lt(1 * 36);
   yurt.lt(2 * 36);
 
-  //top surface
-  shape.top.push([top_pts[0], top_pts[1], top_pts[2], top_pts[3]]);
+	//top surface
+  shape.top.push([top_pts[3], top_pts[2], top_pts[1], top_pts[0]]);
   // sides
-  shape.side.push([top_pts[0], top_pts[1]]);
+  shape.side.push([top_pts[0], top_pts[1], bot_pts[1], bot_pts[0]]);
 	shape.side_skip.push(false);
-  shape.side.push([top_pts[1], top_pts[2]]);
+  shape.side.push([top_pts[1], top_pts[2], bot_pts[2], bot_pts[1]]);
 	shape.side_skip.push(false);
-  shape.side.push([top_pts[3], top_pts[0]]);
+  shape.side.push([top_pts[2], top_pts[3], bot_pts[3], bot_pts[2]]);
 	shape.side_skip.push(false);
-  shape.side.push([top_pts[2], top_pts[3]]);
+  shape.side.push([top_pts[3], top_pts[0], bot_pts[0], bot_pts[3]]);
 	shape.side_skip.push(false);
-
+	//bottom surface
+	shape.bottom.push([bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]]);
 }
 
 // wide tile
@@ -124,28 +147,48 @@ function w (s, vs, vl) {
 
 	yurt.level(base + vl*vs*s);
   top_pts.push([yurt.x, yurt.y, yurt.z]);
-  bot_pts.push([yurt.x, yurt.y, 0]);
+	if (flat_bottom) {
+		bot_pts.push([yurt.x, yurt.y, 0]);
+	}
+	else {
+		bot_pts.push([yurt.x, yurt.y, yurt.z-s*vtilt]);
+	}
 
   yurt.rt(1 * 36);
   yurt.fd(s);
   yurt.rise(vs*vtilt*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
-  bot_pts.push([yurt.x, yurt.y, 0]);
+	if (flat_bottom) {
+		bot_pts.push([yurt.x, yurt.y, 0]);
+	}
+	else {
+		bot_pts.push([yurt.x, yurt.y, yurt.z-s*vtilt]);
+	}
 
   yurt.lt(2 * 36);
   yurt.fd(s);
   yurt.rise(vs*vtilt*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
-  bot_pts.push([yurt.x, yurt.y, 0]);
+	if (flat_bottom) {
+		bot_pts.push([yurt.x, yurt.y, 0]);
+	}
+	else {
+		bot_pts.push([yurt.x, yurt.y, yurt.z-s*vtilt]);
+	}
 
   yurt.lt(3 * 36);
   yurt.fd(s);
   yurt.rise(vs*vtilt*-1*s);
 
   top_pts.push([yurt.x, yurt.y, yurt.z]);
-  bot_pts.push([yurt.x, yurt.y, 0]);
+	if (flat_bottom) {
+		bot_pts.push([yurt.x, yurt.y, 0]);
+	}
+	else {
+		bot_pts.push([yurt.x, yurt.y, yurt.z-s*vtilt]);
+	}
 
   yurt.lt(2 * 36);
   yurt.fd(s);
@@ -156,16 +199,18 @@ function w (s, vs, vl) {
   yurt.lt(1 * 36);
 
   //top surface
-  shape.top.push([top_pts[0], top_pts[1], top_pts[2], top_pts[3]]);
+  shape.top.push([top_pts[3], top_pts[2], top_pts[1], top_pts[0]]);
   // sides
-  shape.side.push([top_pts[0], top_pts[1]]);
+  shape.side.push([top_pts[0], top_pts[1], bot_pts[1], bot_pts[0]]);
 	shape.side_skip.push(false);
-  shape.side.push([top_pts[1], top_pts[2]]);
+  shape.side.push([top_pts[1], top_pts[2], bot_pts[2], bot_pts[1]]);
 	shape.side_skip.push(false);
-  shape.side.push([top_pts[2], top_pts[3]]);
+  shape.side.push([top_pts[2], top_pts[3], bot_pts[3], bot_pts[2]]);
 	shape.side_skip.push(false);
-  shape.side.push([top_pts[3], top_pts[0]]);
+  shape.side.push([top_pts[3], top_pts[0], bot_pts[0], bot_pts[3]]);
 	shape.side_skip.push(false);
+	//bottom surface
+	shape.bottom.push([bot_pts[0], bot_pts[1], bot_pts[2], bot_pts[3]]);
 
 }
 
@@ -284,24 +329,15 @@ function produce_mesh (mesh) {
 		mesh.quad(pts[0], pts[1], pts[2], pts[3]);
 	});
   // sides
+	//top surface
 	shape.side.forEach(function(pts, i) {
-		var bot_a;
-		var bot_b;
-		var bot_pts;
 		if (!shape.side_skip[i]) {
-			bot_a = [pts[0][0],pts[0][1],0];
-			bot_b = [pts[1][0],pts[1][1],0];
-			bot_pts = [bot_a, bot_b];
-			mesh.quad(pts[0], pts[1], bot_pts[1], bot_pts[0]);
+			mesh.quad(pts[0], pts[1], pts[2], pts[3]);
 		}
 	});
   // bottom
-	shape.top.forEach(function(pts) {
-		var bot_a = [pts[0][0],pts[0][1],0];
-		var bot_b = [pts[1][0],pts[1][1],0];
-		var bot_c = [pts[2][0],pts[2][1],0];
-		var bot_d = [pts[3][0],pts[3][1],0];
-		mesh.quad(bot_a, bot_b, bot_c, bot_d);
+	shape.bottom.forEach(function(pts) {
+		mesh.quad(pts[0], pts[1], pts[2], pts[3]);
 	});
 }
 
@@ -318,6 +354,7 @@ function process(params) {
 	vertical_scale = vertical_scale * me;
 	base = params["base"] || 1;
 	invert = params["invert"] || false;
+	flat_bottom = params["flat_bottom"];
 
 	var mesh = new Mesh3D();
 	var starting_tilt = true;
