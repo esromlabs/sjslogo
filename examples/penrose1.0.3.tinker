@@ -32,6 +32,13 @@ params = [
 	{ "id": "base", "displayName": "Base Height", "type": "float", "rangeMin": -20, "rangeMax": 20, "default": 2 }
 ];
 
+function intersection(line1, line2) {
+// two lines
+// y = a1 + b1x, y = a2 + b2x
+// intersect at
+// xi = - (a1 - a2) / (b1 - b2), yi = a1 + b1xi
+}
+
 function toRad(degrees) { return degrees * 0.0174532925; }
 
 // yurt is a turtle graphics style vector lib
