@@ -32,17 +32,21 @@ params = [
 	{ "id": "base", "displayName": "Base Height", "type": "float", "rangeMin": -20, "rangeMax": 20, "default": 2 }
 ];
 
-function slope (pt1, pt2) {
-	// rise over run
-	
+function slope (pta, ptb) {
+	  var rise = ptb[1] - pta[1];
+	  var run = ptb[0] - pta[0];
+	  return (run !== 0)? rise/run: NaN;
 }
 function intersection(line1, line2) {
 	// two lines
 	// y = m1*x + b1, y = m2*x + b2
 	// intersect at
 	// xi = - (b1 - b2) / (m1 - m2), yi = b1 + m1*xi
+
 	var m1 = slope(line1.pts[0], line1.pts[1]);
 	var m2 = slope(line2.pts[0], line2.pts[1]);
+	var y1 = line1.pts[0][1], x1 = line1.pts[0][0];
+	var b1 = y1 - m1*x1;
 }
 
 function toRad(degrees) { return degrees * 0.0174532925; }
