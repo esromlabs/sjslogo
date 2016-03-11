@@ -12,6 +12,7 @@ function t (s, rise) {
   yurt.fd(s * 0.618034 *1.18);
   yurt.pop();
 
+  yurt.push();
   yurt.rt(2 * 36);
   yurt.fd(s, rise);
   yurt.lt(4 * 36);
@@ -22,6 +23,8 @@ function t (s, rise) {
   yurt.fd(s, -rise);
   yurt.lt(1 * 36);
   yurt.lt(2 * 36);
+  yurt.pop();
+
   yurt.pu();
 }
 
@@ -36,7 +39,7 @@ function w (s, rise) {
   yurt.fd(s * 0.618034 * 1.18);
   yurt.pop();
 
-
+  yurt.push();
   yurt.rt(1 * 36);
   yurt.fd(s, rise);
   yurt.lt(2 * 36);
@@ -47,6 +50,8 @@ function w (s, rise) {
   yurt.fd(s, -rise);
   yurt.lt(3 * 36);
   yurt.lt(1 * 36);
+  yurt.pop();
+
   yurt.pu();
 }
 
@@ -68,6 +73,8 @@ function gen (s, k, depth, paint_at_level) {
     scale = s * 0.618034;
 
     if (k === 't') {
+      yurt.push();
+
       // generate a t and w
       // first the t
       yurt.fd(scale);
@@ -93,8 +100,10 @@ function gen (s, k, depth, paint_at_level) {
       yurt.fd(scale);
 
       yurt.rt(4 * 36);
+      yurt.pop();
   }
     if (k === 'w') {
+      yurt.push();
       // w -> w t w
       // first generate w
       yurt.rt(2 * 36);
@@ -131,6 +140,7 @@ function gen (s, k, depth, paint_at_level) {
       yurt.rt(1 * 36);
       yurt.fd(s * 1.618034);
       yurt.lt(5 * 36);
+      yurt.pop();
     }
   }
 }
@@ -142,7 +152,7 @@ yurt.fd(260);
 yurt.rt(90);
 
 yurt.rt(2 * 36);
-var level = 5;
+var level = 2;
 var scale = 280;
 // level one test of 't'
 //t(scale);
