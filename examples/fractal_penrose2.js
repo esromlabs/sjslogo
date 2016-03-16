@@ -54,7 +54,8 @@ function w (s, rise) {
 
   yurt.pu();
 }
-
+var phi = 0.618034;
+var Phi = phi +1;
 // generate (at_scale, kind[t,w], recursion_depth, paint_all_levels)
 function gen (s, k, depth, paint_at_level) {
   'use strict';
@@ -75,16 +76,18 @@ function gen (s, k, depth, paint_at_level) {
     if (k === 't') {
       yurt.push();
 
-      yurt.rt(1 * 36);
+      yurt.rt(0 * 36);
+      //yurt.fd(scale);
+      //yurt.lt(0 * 36);
       // generate a t and w
       if (paint_at_level >= depth) {
         t(scale);
       }
       gen(scale, 't', dep, paint_at_level);
 
-      yurt.rt(3 * 36);
-      yurt.fd(s);
-      yurt.lt(6 * 36);
+      yurt.rt(8 * 36);
+      yurt.fd(scale);
+      yurt.lt(7 * 36);
 
       if (paint_at_level >= depth) {
         w(scale);
@@ -96,16 +99,27 @@ function gen (s, k, depth, paint_at_level) {
     if (k === 'w') {
       yurt.push();
       // w -> w t w
+
+      yurt.rt(2 * 36);
+      yurt.fd(scale * phi);
+      yurt.lt(4 * 36);
+
       if (paint_at_level >= depth) {
         w(scale);
       }
       gen(scale, 'w', dep, paint_at_level);
 
+      yurt.rt(1 * 36);
+      yurt.fd(scale);
+      yurt.lt(0 * 36);
       if(paint_at_level >= depth) {
         t(scale);
       }
       gen(scale, 't', dep, paint_at_level);
 
+      yurt.rt(-2 * 36);
+      yurt.fd(scale);
+      yurt.lt(-3 * 36);
       if (paint_at_level >= depth) {
         w(scale);
       }
@@ -122,11 +136,11 @@ yurt.fd(260);
 yurt.rt(90);
 
 yurt.rt(2 * 36);
-var level = 1;
+var level = 2;
 var scale = 280;
 // level one test of 't'
 //t(scale);
-gen(scale, 't', level, 1);
+//gen(scale, 't', level, 1);
 yurt.lt(1 * 36);
 
 yurt.bk(scale * 1.618034);
